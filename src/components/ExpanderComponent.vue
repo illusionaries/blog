@@ -5,6 +5,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 const props = defineProps<{
   initialCollapsed?: boolean
   extendToggleArea?: boolean
+  headerWrapperClass?: string
 }>()
 
 const contentWrapperRef = ref<HTMLDivElement>()
@@ -49,7 +50,7 @@ onUnmounted(() => {
     <div
       flex="~ items-center"
       @click="extendToggleArea ? toggleCollapsed() : null"
-      :class="{ 'cursor-pointer': extendToggleArea }">
+      :class="[{ 'cursor-pointer': extendToggleArea }, headerWrapperClass ?? '']">
       <slot name="header"></slot>
       <button
         title="切换折叠状态"

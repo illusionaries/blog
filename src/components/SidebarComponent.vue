@@ -144,7 +144,11 @@ onMounted(() => {
           </ClientOnly>
         </div>
         <div overflow-y-scroll p-x-6 md:p-x-12 p-y-4 class="scroll-masked">
-          <ExpanderComponent m-t-4 v-for="category in categories" :key="category.title">
+          <ExpanderComponent
+            m-t-4
+            v-for="category in categories"
+            :key="category.title"
+            header-wrapper-class="sticky top-4">
             <template #header>
               <h3 m-0>
                 <a
