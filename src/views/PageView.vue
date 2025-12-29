@@ -287,7 +287,7 @@ const isDev = import.meta.env.DEV
             <div m-t-12 v-if="!page.isIndex && !isDev" id="comments">
               <Giscus
                 :key="route.path"
-                repo="djdjz7/blog"
+                repo="illusionaryd/blog"
                 repo-id="R_kgDOJ-yiVw"
                 category="General"
                 category-id="DIC_kwDOJ-yiV84CzLiO"

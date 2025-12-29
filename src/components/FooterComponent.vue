@@ -6,7 +6,7 @@ const year = new Date().getFullYear()
   <footer text-center flex="~ col items-center" text-sm text-gray-400 dark:text-truegray-600>
     <div flex="~ gap-2">
       <a href="/me/" text-inherit>我</a>
-      <a href="https://github.com/djdjz7" text-inherit>GitHub</a>
+      <a href="https://github.com/illusionaryd" text-inherit>GitHub</a>
       <a href="/friends/" text-inherit>友链</a>
     </div>
     <div m-t-4>© 2023 - {{ year }}</div>

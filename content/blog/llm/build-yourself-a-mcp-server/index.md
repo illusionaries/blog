@@ -992,7 +992,7 @@ SDK 中还有例如 `registerPrompt()` `registerResource()` 这样的方法完�
 
 但是无论如何，这都是一个非常有趣的小玩具，读者也可尝试扩充这个小玩具的各种功能
 
-完整代码见 [GitHub 仓库](https://github.com/djdjz7/pix-mcp)，完成这篇文章时对本仓库的代码进行了小范围的修改，因此并不完全一致
+完整代码见 [GitHub 仓库](https://github.com/illusionaryd/pix-mcp)，完成这篇文章时对本仓库的代码进行了小范围的修改，因此并不完全一致
 
 [^1]: [Introduction - Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro)
 

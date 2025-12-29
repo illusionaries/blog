@@ -38,7 +38,7 @@ export const SiteConfiguration: SiteConfiguration = {
   theme: 'normal',
   pureStatic: true,
   git: {
-    repo: 'djdjz7/blog',
+    repo: 'illusionaryd/blog',
   },
   defaultLang: 'zh-CN',
 }
