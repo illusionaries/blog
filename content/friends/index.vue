@@ -41,8 +41,10 @@ const friends: Friend[] = [
 <template>
   <div flex="~ col">
     <div
-      v-for="friend in friends"
+      v-for="(friend, index) in friends"
       :key="friend.link"
+      class="slide-in"
+      :style="{ '--slide-in-stage': index }"
       p-y-4
       border-b="1 solid truegray-200/40 dark:dark-100/60 last-of-type:none">
       <a
