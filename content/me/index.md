@@ -13,15 +13,14 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { LanguageIcon } from '@heroicons/vue/24/solid'
 const greetings = ref<string[]>(['Hello!', 'Good morning!', 'Good afternoon!', 'Good evening!', 'Good night!'])
 const index = ref(0)
-const loaded = ref(false);
+let interval = null;
 onMounted(() => {
-  loaded.value = true;
+  interval = setInterval(() => {
+    index.value = (index.value + 1) % greetings.value.length;
+  }, 2000)
 });
-const interval = setInterval(() => {
-  index.value = (index.value + 1) % greetings.value.length;
-}, 2000);
 onUnmounted(() => {
-  clearInterval(interval);
+  if (interval) clearInterval(interval);
 });
 </script>
 
