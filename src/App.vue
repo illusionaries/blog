@@ -11,12 +11,18 @@ const searchComp = useTemplateRef('search-comp-ref')
 provide('showSearch', () => {
   searchComp.value?.show()
 })
+
+if (SiteConfiguration.theme === 'new-year' && import.meta.env.SSR === false) {
+  const styleElement = document.createElement('style')
+  styleElement.innerHTML = `@import url('https://fonts.googleapis.com/css2?family=Ephesis&family=Liu+Jian+Mao+Cao&display=swap');`
+  document.head.appendChild(styleElement)
+}
 </script>
 
 <template>
   <NewYearBg v-if="SiteConfiguration.theme === 'new-year'" />
   <div v-else class="bg"></div>
-  <MainComponent z-1 relative />
+  <MainComponent z-1 relative :class="{ 'new-year': SiteConfiguration.theme === 'new-year' }" />
   <ClientOnly>
     <FullscreenSearch ref="search-comp-ref" />
   </ClientOnly>

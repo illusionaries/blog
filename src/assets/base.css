@@ -1,7 +1,7 @@
 body {
   padding: 0;
   margin: 0 auto;
-  -webkit-text-size-adjust: none;
+  /* -webkit-text-size-adjust: none; */
   text-size-adjust: none;
   font-size: 16px;
 }
@@ -134,4 +134,9 @@ mark {
   text-decoration-thickness: 60%;
   text-underline-offset: -40%;
   color: inherit;
+}
+
+.new-year {
+  font-family: 'Ephesis', 'Liu Jian Mao Cao', serif;
+  font-optical-sizing: auto;
 }
