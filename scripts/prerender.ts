@@ -6,22 +6,22 @@ import fs from 'node:fs'
 import path from 'node:path'
 import url from 'node:url'
 import fg from 'fast-glob'
-import { SiteConfiguration, RouteTitleRecord } from './src/site.js'
+import { SiteConfiguration, RouteTitleRecord } from '../src/site.js'
 import gm from 'gray-matter'
 import chalk from 'chalk'
 import yaml from 'js-yaml'
 
 console.log(chalk.bgYellow.greenBright('Prerender:'))
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+const PROJECT_ROOT = path.dirname('./')
 
-const toAbsolute = (p: string) => path.resolve(__dirname, p)
+const toAbsolute = (p: string) => path.resolve(PROJECT_ROOT, p)
 
 const manifest = JSON.parse(
   fs.readFileSync(toAbsolute('dist/static/.vite/ssr-manifest.json'), 'utf-8'),
 )
 const template = fs.readFileSync(toAbsolute('dist/static/index.html'), 'utf-8')
-const { render } = await import('./dist/server/entry-server.js')
+const { render } = await import(toAbsolute('dist/server/entry-server.js'))
 
 const routesToPrerender = ['/', '/404.html']
 

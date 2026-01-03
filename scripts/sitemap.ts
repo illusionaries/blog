@@ -3,7 +3,7 @@ import { Readable } from 'stream'
 import fg from 'fast-glob'
 import matter from 'gray-matter'
 import fs from 'fs'
-import { RouteTitleRecord } from './src/site.ts'
+import { RouteTitleRecord } from '../src/site.ts'
 import chalk from 'chalk'
 import yaml from 'js-yaml'
 

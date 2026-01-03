@@ -7,7 +7,7 @@ import chalk from 'chalk'
 
 console.log(chalk.bgYellow.greenBright('Minify:'))
 
-const DIST_DIR = path.join(__dirname, 'dist', 'static')
+const DIST_DIR = path.join('dist', 'static')
 const hashCache: Record<string, string> = {}
 
 function generateSriHash(filePath: string): string {

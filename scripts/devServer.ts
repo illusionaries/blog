@@ -5,7 +5,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import { ViteDevServer } from 'vite'
-import { SiteConfiguration } from './src/site'
+import { SiteConfiguration } from '../src/site.js'
 
 const isTest = process.env.VITEST
 
@@ -74,7 +74,7 @@ export async function createServer(
         render = (await vite.ssrLoadModule('/src/entry-server')).render
       } else {
         template = indexProd
-        render = (await import('./dist/server/entry-server.js')).render
+        render = (await import('../dist/server/entry-server.js')).render
       }
 
       const [appHtml, preloadLinks, titlePrefix, meta] = await render(url, manifest)
