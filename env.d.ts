@@ -5,3 +5,10 @@ declare module 'virtual:pages.json' {
   const pages: PageData[]
   export default pages
 }
+
+declare module 'virtual:context' {
+  const context: {
+    githubSHA: string
+  }
+  export default context
+}

@@ -6,6 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import UnoCSS from 'unocss/vite'
 import PagesGenerator from './generator/pages-generator'
 import MarkdownContentGenerator from './generator/content-generator'
+import { ContextPlugin } from './generator/context'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
     vueDevTools(),
     UnoCSS(),
     PagesGenerator(),
+    ContextPlugin(),
   ],
   resolve: {
     alias: {

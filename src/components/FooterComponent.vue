@@ -8,6 +8,7 @@ const year = new Date().getFullYear()
       <a href="/me/" text-inherit>About Me</a>
       <a href="https://github.com/illusionaryd" text-inherit>GitHub</a>
       <a href="/friends/" text-inherit>Friends</a>
+      <a href="/site/" text-inherit>ScantPress</a>
     </div>
     <div m-t-4>© 2023 - {{ year }}</div>
     <div text-xs>

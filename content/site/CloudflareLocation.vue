@@ -1,0 +1,29 @@
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { CloudflareColoLocations } from './colo'
+
+const message = ref('')
+
+onMounted(async () => {
+  try {
+    const response = await (await fetch('/cdn-cgi/trace')).text()
+    const match = response.match(/^colo=(.*)$/m)
+    if (match) {
+      const colo = match[1]!
+      if (colo in CloudflareColoLocations)
+        message.value = `Your request is being served by the Cloudflare CDN location: ${CloudflareColoLocations[colo as keyof typeof CloudflareColoLocations]}.`
+      else
+        message.value = `We are unable to determine the Cloudflare CDN serving your request: The colo code is ${colo}, which is not found in our database.`
+    } else {
+      message.value =
+        'We are unable to determine the Cloudflare CDN serving your request: No colo information found.'
+    }
+  } catch (e) {
+    message.value = `We are unable to determine the Cloudflare CDN serving your request: ${e}.`
+  }
+})
+</script>
+
+<template>
+  <span class="slide-in" :key="message">{{ message }}</span>
+</template>
