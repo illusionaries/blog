@@ -62,7 +62,8 @@ const prevGroupLength = computed(() => {
           class="slide-in"
           v-for="(page, pageIndex) in pageGroup.items"
           :style="{
-            '--slide-in-stage': pageIndex + prevGroupLength[groupIndex]!,
+            // 1-based
+            '--slide-in-stage': pageIndex + prevGroupLength[groupIndex]! + 1,
           }"
           :page-entry="page"
           :key="page.title" />
