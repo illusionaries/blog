@@ -38,6 +38,7 @@
         "@vue/tsconfig": "^0.8.1",
         "chalk": "^5.6.2",
         "cheerio": "^1.1.2",
+        "cloudflare-server-locations": "latest",
         "compression": "^1.8.1",
         "eslint": "^9.39.1",
         "eslint-plugin-vue": "^10.6.0",
@@ -566,6 +567,8 @@
     "chokidar": ["chokidar@3.6.0", "https://registry.npmmirror.com/chokidar/-/chokidar-3.6.0.tgz", { "dependencies": { "anymatch": "~3.1.2", "braces": "~3.0.2", "glob-parent": "~5.1.2", "is-binary-path": "~2.1.0", "is-glob": "~4.0.1", "normalize-path": "~3.0.0", "readdirp": "~3.6.0" }, "optionalDependencies": { "fsevents": "~2.3.2" } }, "sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw=="],
 
     "clean-css": ["clean-css@4.2.4", "https://registry.npmmirror.com/clean-css/-/clean-css-4.2.4.tgz", { "dependencies": { "source-map": "~0.6.0" } }, "sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A=="],
+
+    "cloudflare-server-locations": ["cloudflare-server-locations@1.0.2", "", { "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-gU7yOdeFnQwSeFiT1l1CS1XB+0UO1Z/8FO1BDbMdOw3gJNUL0rKe7MIHtabsOs2vgqaFkgjp/IYFb+5f1wMnCA=="],
 
     "color-convert": ["color-convert@2.0.1", "https://registry.npmmirror.com/color-convert/-/color-convert-2.0.1.tgz", { "dependencies": { "color-name": "~1.1.4" } }, "sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ=="],
 
