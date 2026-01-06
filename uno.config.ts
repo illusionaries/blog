@@ -14,15 +14,15 @@ export default defineConfig({
     'ease-fast-in': 'ease-[cubic-bezier(0.160,_0.435,_0.000,_1.005)]!',
     ...(SiteConfiguration.theme === 'normal'
       ? {
-        'text-primary': 'text-amber-500 dark:text-amber-300',
-        'border-primary': 'border-amber-500 dark:border-amber-300',
-        'bg-primary': 'bg-amber-500 dark:bg-amber-300',
-      }
+          'text-primary': 'text-amber-500 dark:text-amber-300',
+          'border-primary': 'border-amber-500 dark:border-amber-300',
+          'bg-primary': 'bg-amber-500 dark:bg-amber-300',
+        }
       : {
-        'text-primary': 'text-red-500 dark:text-red-300',
-        'border-primary': 'border-red-500 dark:border-red-300',
-        'bg-primary': 'bg-red-500 dark:bg-red-300',
-      }),
+          'text-primary': 'text-red-500 dark:text-red-300',
+          'border-primary': 'border-red-500 dark:border-red-300',
+          'bg-primary': 'bg-red-500 dark:bg-red-300',
+        }),
   },
   safelist: [
     'bg-blue-200',

@@ -11,7 +11,8 @@
     "src/site.ts",
     "generator/*.ts",
     "generator/**/*.ts",
-    "scripts/*.ts"
+    "scripts/*.ts",
+    "local/*.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -19,8 +20,6 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": [
-      "node"
-    ]
+    "types": ["node", "bun"]
   }
 }
