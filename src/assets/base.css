@@ -28,7 +28,18 @@ input {
 @supports (font-variation-settings: normal) {
   :root,
   input {
-    font-family: InterVariable, sans-serif;
+    font-family:
+      InterVariable,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      'Open Sans',
+      'Helvetica Neue',
+      sans-serif;
   }
 }
 
