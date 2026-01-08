@@ -106,6 +106,7 @@ function extractContainerTitle(info: string, klass: string) {
 }
 
 function createContainer(md: MarkdownIt, klass: string, title: string) {
+  // @ts-expect-error: markdown-it-container typing issues
   MarkdownItContainer(md, klass, {
     render: (tokens: Token[], idx: number) => {
       return tokens[idx].nesting === 1
@@ -156,6 +157,7 @@ export class MarkdownInstance {
         .use(createContainer, 'warning', this.config.markdown.container.warningLabel || 'WARNING')
         .use(createContainer, 'error', this.config.markdown.container.errorLabel || 'ERROR')
         .use(createContainer, 'info', this.config.markdown.container.infoLabel || 'INFO')
+        // @ts-expect-error: markdown-it-container typing issues
         .use(MarkdownItContainer, 'expander', {
           render: (tokens: Token[], idx: number) => {
             if (tokens[idx].nesting === 1) {
