@@ -1,4 +1,3 @@
-import 'virtual:uno.css'
 import '@app/assets/base.css'
 import '@app/assets/codeblocks.css'
 import '@app/assets/containers.css'

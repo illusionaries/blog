@@ -20,6 +20,7 @@ const client = build({
     outDir: path.resolve(PROJECT_ROOT, 'dist/static'),
     emptyOutDir: true,
     ssrManifest: true,
+    reportCompressedSize: false,
   },
 })
 
@@ -28,6 +29,7 @@ const server = build({
     outDir: path.resolve(PROJECT_ROOT, 'dist/server'),
     emptyOutDir: true,
     ssr: 'entry-server.ts',
+    reportCompressedSize: false,
   },
 })
 

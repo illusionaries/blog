@@ -20,6 +20,7 @@ export default async function ScantPress(): Promise<PluginOption[]> {
     indexGenerator(configWithPath),
     contextPlugin(configWithPath),
     UnoCSS({
+      mode: 'vue-scoped',
       presets: [
         presetWind3({
           dark: 'media',
