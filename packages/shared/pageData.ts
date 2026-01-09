@@ -3,6 +3,7 @@ export interface PageData {
   title: string
   textTitle: string
   excerpt?: string
+  textExcerpt?: string
   category?: string
   contentUrl: string
   sourceUrl: string

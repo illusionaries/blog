@@ -187,7 +187,7 @@ if (ssrContext) {
   // this only retrieves the raw title without template formatting
   ctx.titlePrefix = title.value
   const meta: { [key: string]: string } = page.value.data?.meta ?? {}
-  meta.description = (meta.description ?? page.value.data?.excerpt ?? '').trim()
+  meta.description = (meta.description ?? page.value.data?.textExcerpt ?? '').trim()
   ctx.meta = meta
   ctx.time = page.value.data?.time ?? ''
   ctx.author = (page.value.data?.data as any)?.author ?? ''

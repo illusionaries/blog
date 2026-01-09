@@ -67,6 +67,11 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
               : frontmatter.excerpt
                 ? (await md.renderMarkdown(frontmatter.excerpt, {})).result
                 : undefined,
+            textExcerpt: noExerpt
+              ? undefined
+              : frontmatter.excerpt
+                ? (await md.renderMarkdownInline(frontmatter.excerpt)).textContent
+                : undefined,
             contentUrl: `${slug}`,
             sourceUrl: entryToRoot,
             tags,
