@@ -1,0 +1,19 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index e5fd0515ad2345073b54972ae2f6c0e83a35020f..1c95a22c781f06a6c4516c18a8269f11f1b59396 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -1089,12 +1089,12 @@ function VueScopedPlugin(ctx) {
+     async configResolved() {
+       const { config } = await ctx.ready;
+       filter = config.content?.pipeline === false ? () => false : createFilter(
+-        config.content?.pipeline?.include ?? [/\.vue$/],
++        config.content?.pipeline?.include ?? defaultPipelineInclude,
+         config.content?.pipeline?.exclude ?? defaultPipelineExclude
+       );
+     },
+     async transform(code, id) {
+-      if (!filter(id) || !id.endsWith(".vue"))
++      if (!filter(id) || !(id.endsWith(".vue") || id.endsWith(".md")))
+         return;
+       const css = await transformSFC(code);
+       if (css) {
