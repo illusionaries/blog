@@ -13,6 +13,7 @@
     "@scantpress/shared": "workspace:^",
     "@shikijs/markdown-it": "catalog:markdown",
     "@shikijs/transformers": "catalog:markdown",
+    "@unocss/vite": "catalog:framework",
     "fast-glob": "catalog:build",
     "gray-matter": "catalog:build",
     "image-size": "catalog:build",

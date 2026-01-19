@@ -11,4 +11,5 @@ export interface PageData {
   data: { [key: string]: unknown }
   tags?: string[]
   lang?: string
+  classes?: string[]
 }

@@ -48,6 +48,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
           const tags = data.tags
           const noExerpt = data.noExcerpt || false
           const lang = data.lang || config.defaultLang
+          const classes = data.classes || []
           delete data.time
           delete data.title
           delete data.meta
@@ -55,6 +56,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
           delete data.tags
           delete data.noExcerpt
           delete data.lang
+          delete data.classes
           return {
             title,
             textTitle,
@@ -76,6 +78,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
             sourceUrl: entryToRoot,
             tags,
             lang,
+            classes,
           }
         }),
     )
