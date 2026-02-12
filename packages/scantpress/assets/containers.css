@@ -1,5 +1,5 @@
 .container {
-  --at-apply: p-4 rounded-md m-y-2 w-auto;
+  --at-apply: p-4 rounded-md m-y-2 w-auto box-border;
 }
 
 .expander {
