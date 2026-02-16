@@ -98,3 +98,8 @@ code,
 .monospace {
   font-family: 'Fira Code', monospace;
 }
+
+.new-year code,
+.new-year .monospace {
+  font-family: 'Courier Prime', monospace;
+}

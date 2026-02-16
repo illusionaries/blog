@@ -15,7 +15,7 @@ provide('showSearch', () => {
 
 if (context.config.theme === 'new-year' && import.meta.env.SSR === false) {
   const styleElement = document.createElement('style')
-  styleElement.innerHTML = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Noto+Serif+SC:wght@200..900&display=swap');`
+  styleElement.innerHTML = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+SC:wght@200..900&display=swap');`
   document.head.appendChild(styleElement)
 }
 
