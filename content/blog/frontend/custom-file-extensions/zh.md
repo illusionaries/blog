@@ -708,12 +708,12 @@ routes.push('/')
 随后我们渲染并写入每个页面：
 
 ```ts
-// should be the build result
+// 应该指向构建结果
 const render = (await import('../dist/server/entry-server.js' as string).then(
   (mod) => mod.render,
 )) as (path: string) => Promise<{ html: string; ctx: Record<string, any> }>
-// also, should be the build result
-// (src/entry-client.ts is now something else like /assets/index-A9a30asf.js!)
+// 这里也应当指向构建结果
+// (src/entry-client.ts 已经变成 /assets/index-A9a30asf.js 这样的东西了！)
 const template = await fs.readFile('dist/client/index.html', 'utf-8')
 const manifest = JSON.parse(
   await fs.readFile('dist/client/.vite/ssr-manifest.json', 'utf-8'),
