@@ -8,5 +8,6 @@
     "dev": {
       "dependsOn": ["^build"]
     }
-  }
+  },
+  "ui": "tui"
 }
