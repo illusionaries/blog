@@ -103,3 +103,11 @@ code,
 .new-year .monospace {
   font-family: 'Courier Prime', monospace;
 }
+
+code {
+  --at-apply: 'text-sm';
+}
+
+code:not(.shiki code) {
+  --at-apply: 'text-purple-500 dark:text-purple-400 py-0.5 px-1 rounded bg-gray-100 dark:bg-truegray-800 vertical-baseline';
+}
