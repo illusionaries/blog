@@ -6,7 +6,13 @@ const year = new Date().getFullYear()
   <footer text-center flex="~ col items-center" text-sm text-gray-400 dark:text-truegray-600>
     <div flex="~ gap-2">
       <a href="/me/" text-inherit>About Me</a>
-      <a href="https://github.com/illusionaries" text-inherit>GitHub</a>
+      <a
+        href="https://github.com/illusionaries"
+        target="_blank"
+        rel="noopener noreferrer"
+        text-inherit
+        >GitHub</a
+      >
       <a href="/friends/" text-inherit>Friends</a>
       <a href="/site/" text-inherit>ScantPress</a>
     </div>

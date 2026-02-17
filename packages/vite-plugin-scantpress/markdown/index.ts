@@ -15,6 +15,7 @@ import { componentPlugin } from '@mdit-vue/plugin-component'
 import { type MarkdownSfcBlocks, sfcPlugin } from '@mdit-vue/plugin-sfc'
 import { headersPlugin, type MarkdownItHeader } from '@mdit-vue/plugin-headers'
 import MarkdownItFootnote from 'markdown-it-footnote'
+import LinkProcessor from './link-processor.js'
 import ImageProcessor from './image-processor.js'
 import anchor from 'markdown-it-anchor'
 import { imgLazyload } from '@mdit/plugin-img-lazyload'
@@ -144,6 +145,7 @@ export class MarkdownInstance {
     })
     instance
       .use(MarkdownItFootnote)
+      .use(LinkProcessor)
       .use(ImageProcessor, path.resolve(this.config.root, 'public'))
       .use(tex, {
         render(content, displayMode, env: MarkdownRenderEnv) {

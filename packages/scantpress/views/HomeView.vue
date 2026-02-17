@@ -76,6 +76,8 @@ onMounted(() => {
           <a
             v-if="context.config.social?.github"
             :href="`https://github.com/${context.config.social.github}`"
+            target="_blank"
+            rel="noopener noreferrer"
             h-7>
             <AutoDarkImage :src="GithubMark" :src-dark="GithubMarkWhite" h-full alt="Github 标识" />
           </a>

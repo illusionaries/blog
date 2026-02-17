@@ -53,6 +53,12 @@ a:hover {
   text-decoration-color: currentColor;
 }
 
+a[target='_blank']::after {
+  content: ' ↗';
+  color: rgba(from currentColor r g b / 0.5);
+  font-size: 0.75em;
+}
+
 p {
   --at-apply: line-height-relaxed;
 }
