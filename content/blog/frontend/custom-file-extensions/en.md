@@ -12,6 +12,8 @@ In this article, we will explore how to create a photo gallery using Vite & Vue,
 
 ---
 
+[简体中文](../zh/)
+
 ## Introduction
 
 For beginners, authorizing a Vite plugin might seem an intimidating task. However, with Vite's well-designed plugin API and the rich ecosystem of NPM packages, it is not that hard to get started.
@@ -84,7 +86,7 @@ export default defineConfig({
 
 ::::
 
-:::expander main.ts
+:::expander src/main.ts
 
 ```ts
 // import ...
@@ -394,7 +396,7 @@ Now Vite can process our `*.gallery` files, so it is time to actually import the
 To keep things simple, we would import all gallery files eagerly.
 
 ```ts
-// main.ts
+// src/main.ts
 const galleries = import.meta.glob<{ default: Gallery }>('./*.gallery', {
   eager: true,
   base: '../data/',
@@ -434,7 +436,7 @@ const galleries: Record<string, { default: Gallery }> = {
 
 where each `default` is the object parsed from `*.gallery` files.
 
-We inject the `galleries` object into the app instance, so we can access it everywhere. Now main.ts should look like:
+We inject the `galleries` object into the app instance, so we can access it everywhere. Now `src/main.ts` should look like:
 
 ```ts
 // import ...
@@ -570,13 +572,15 @@ You can implement your own version of `GalleryCard` and `ImageCard`.
 Part of the code in this section is taken from https://github.com/vitejs/vite-plugin-vue/blob/main/playground/ssr-vue/prerender.js and https://github.com/vitejs/vite-plugin-vue/blob/main/playground/ssr-vue/src/entry-server.js.
 
 Please read the [official guide from Vite](https://vite.dev/guide/ssr). It covers most of the following part in a clearer manner.
+
+There are some existing tools like [vite-plugin-ssg](https://vite-plugin-ssr.com/) that might help you with the process, but I have not tried them out. Feel free to explore these tools by yourselves.
 :::
 
 This project is perfect for demonstrating SSG.
 
 1. We don’t actually need any JavaScript to display photos.
 2. Once we pre-render every route, navigation-related JavaScript can also be eliminated.
-3. Hydrating with JavaScript can, to some extent, improve the user experience, but it is not necessary.
+3. [Hydrating with JavaScript](https://vuejs.org/guide/scaling-up/ssr.html#client-hydration) can, to some extent, improve the user experience, but it is not necessary.
 
 To make our project SSG-ready, we need to first prepare it for SSR.
 
@@ -652,7 +656,7 @@ To make our project SSG-ready, we need to first prepare it for SSR.
    }
    ```
 
-7. Make sure to use SSR-friendly code in `script setup`, and wrap everything client-only in hooks like `onMounted`
+7. Make sure to use [SSR-friendly code](https://vuejs.org/guide/scaling-up/ssr.html#writing-ssr-friendly-code) in `script setup`, and wrap everything client-only in hooks like `onMounted`
 
 8. Modify `package.json`
 
@@ -667,6 +671,12 @@ To make our project SSG-ready, we need to first prepare it for SSR.
      }
    }
    ```
+
+:::info About SSR/SSG
+If you have read through [the official guide of Vite on SSR](https://vite.dev/guide/ssr), you might have noticed that part of our `render.ts` was taken from their `entry-server.js`, and this part got removed in out `entry-server.ts`.
+
+This part is responsible for taking the partially generated HTML (the part in `<div id="app"></div>`) and the preload links to assemble the final, complete HTML. Where to put this piece of code does not really matter, as long as it is executed in the pre-rendering step.
+:::
 
 ### Generating Pages
 
@@ -764,7 +774,7 @@ You might encounter this: you would like to change the title of the `GalleryView
 
 This trick might help in such scenarios (changing title, lang, etc.):
 
-1. In `script setup`, retrieve SSR Context with `useSSRContext()`
+1. In the `script setup` of the desired Vue component, retrieve SSR Context with `useSSRContext()`
 2. Write a property to the context object
 3. Add a placeholder in `index.html`, such as `<title><!--title--></title>`
 4. In the pre-render script, replace the placeholder in the HTML template with the value in SSR Context `ctx`
