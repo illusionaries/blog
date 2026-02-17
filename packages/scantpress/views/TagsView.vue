@@ -2,7 +2,7 @@
 import { useRoute } from '@app/router/router'
 import TagList from '@app/components/TagList.vue'
 import allPages from 'virtual:pages.json'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import PageListEntry from '@app/components/PageListEntry.vue'
 import LoadingView from './LoadingView.vue'
 import { pageEntryCompare } from '@app/utils'
@@ -25,14 +25,6 @@ const displayingPages = computed(() => {
 onMounted(() => {
   loading.value = false
 })
-
-watch(
-  () => route.path,
-  (newPath) => {
-    const newUrl = new URL(newPath, 'https://a.com')
-    currentTag.value = decodeURIComponent(newUrl.hash.slice(1)) || ''
-  },
-)
 </script>
 
 <template>

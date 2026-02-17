@@ -1,4 +1,4 @@
-import MarkdownIt from 'markdown-it/index.js'
+import type MarkdownIt from 'markdown-it'
 import { imageSize as sizeOf } from 'image-size'
 import path from 'path'
 

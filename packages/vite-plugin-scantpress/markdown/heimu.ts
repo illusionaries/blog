@@ -1,4 +1,4 @@
-import MarkdownIt from 'markdown-it'
+import type MarkdownIt from 'markdown-it'
 
 export default function heimu(md: MarkdownIt) {
   md.inline.ruler.after('text', 'renderHeimu', (state, silent) => {

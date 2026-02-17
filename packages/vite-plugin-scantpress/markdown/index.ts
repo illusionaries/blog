@@ -23,6 +23,8 @@ import { randomUUID } from 'crypto'
 import { JSDOM } from 'jsdom'
 import type { SiteConfiguration } from '@scantpress/shared'
 import path from 'path'
+import { isPromise } from 'util/types'
+import assert from 'assert'
 
 await MathJax.init({
   loader: { load: ['input/tex', 'input/asciimath', 'output/svg', 'a11y/assistive-mml'] },
@@ -117,81 +119,90 @@ function createContainer(md: MarkdownIt, klass: string, title: string) {
 }
 
 export class MarkdownInstance {
-  md: MarkdownIt | undefined
+  md: Promise<MarkdownIt> | MarkdownIt | undefined
   // retrieve root path so we can resolve public directory
   config: SiteConfiguration & { root: string }
   constructor(config: SiteConfiguration & { root: string }) {
     this.config = config
   }
   public async init() {
-    if (!this.md) {
-      this.md = new MarkdownIt({
-        html: true,
-        linkify: true,
-        typographer: true,
-      })
-      this.md
-        .use(MarkdownItFootnote)
-        .use(ImageProcessor, path.resolve(this.config.root, 'public'))
-        .use(tex, {
-          render(content, displayMode, env: MarkdownRenderEnv) {
-            if (!env.math) env.math = { renderPromises: {}, mathjaxInstance: MathJax }
-            if (!env.math.renderPromises) {
-              env.math.renderPromises = {}
-            }
-            const uuid = `<!-- math-${randomUUID()} -->`
+    if (isPromise(this.md)) {
+      return await this.md
+    }
+    if (this.md) {
+      return this.md
+    }
+    this.md = this.createMarkdownInstance()
+    this.md = await this.md
+    return this.md
+  }
+  async createMarkdownInstance() {
+    const instance = new MarkdownIt({
+      html: true,
+      linkify: true,
+      typographer: true,
+    })
+    instance
+      .use(MarkdownItFootnote)
+      .use(ImageProcessor, path.resolve(this.config.root, 'public'))
+      .use(tex, {
+        render(content, displayMode, env: MarkdownRenderEnv) {
+          if (!env.math) env.math = { renderPromises: {}, mathjaxInstance: MathJax }
+          if (!env.math.renderPromises) {
+            env.math.renderPromises = {}
+          }
+          const uuid = `<!-- math-${randomUUID()} -->`
 
-            env.math.renderPromises[uuid] = MathJax.tex2svgPromise(content, {
-              display: displayMode,
-            })
-            return uuid
-          },
-        } as MarkdownItTexOptions)
-        .use(heimu)
-        .use(anchor, {
-          permalink: anchor.permalink.ariaHidden({
-            placement: 'before',
-            class: 'header-anchor',
-          }),
-        })
-        .use(createContainer, 'warning', this.config.markdown.container.warningLabel || 'WARNING')
-        .use(createContainer, 'error', this.config.markdown.container.errorLabel || 'ERROR')
-        .use(createContainer, 'info', this.config.markdown.container.infoLabel || 'INFO')
-        // @ts-expect-error: markdown-it-container typing issues
-        .use(MarkdownItContainer, 'expander', {
-          render: (tokens: Token[], idx: number) => {
-            if (tokens[idx].nesting === 1) {
-              return `
+          env.math.renderPromises[uuid] = MathJax.tex2svgPromise(content, {
+            display: displayMode,
+          })
+          return uuid
+        },
+      } as MarkdownItTexOptions)
+      .use(heimu)
+      .use(anchor, {
+        permalink: anchor.permalink.ariaHidden({
+          placement: 'before',
+          class: 'header-anchor',
+        }),
+      })
+      .use(createContainer, 'warning', this.config.markdown.container.warningLabel || 'WARNING')
+      .use(createContainer, 'error', this.config.markdown.container.errorLabel || 'ERROR')
+      .use(createContainer, 'info', this.config.markdown.container.infoLabel || 'INFO')
+      // @ts-expect-error: markdown-it-container typing issues
+      .use(MarkdownItContainer, 'expander', {
+        render: (tokens: Token[], idx: number) => {
+          if (tokens[idx].nesting === 1) {
+            return `
 <ExpanderComponent class="expander" :initial-collapsed="true"
   :extend-toggle-area="true">
   <template #header>
     <span font-bold text-sm p-y-4>${extractExpanderTitle(tokens[idx].info) ?? this.config.markdown.container.expanderLabel ?? 'MORE'}</span>
   </template>\n`
-            } else {
-              return '</ExpanderComponent>\n'
-            }
+          } else {
+            return '</ExpanderComponent>\n'
+          }
+        },
+      })
+      .use(
+        await Shiki({
+          themes: {
+            light: 'catppuccin-latte',
+            dark: 'one-dark-pro',
           },
-        })
-        .use(
-          await Shiki({
-            themes: {
-              light: 'catppuccin-latte',
-              dark: 'one-dark-pro',
-            },
-            transformers: [
-              transformerNotationDiff(),
-              transformerNotationFocus(),
-              transformerNotationHighlight(),
-              transformerRemoveNotationEscape(),
-            ],
-          }),
-        )
-        .use(componentPlugin)
-        .use(sfcPlugin)
-        .use(headersPlugin)
-        .use(imgLazyload)
-    }
-    return this.md
+          transformers: [
+            transformerNotationDiff(),
+            transformerNotationFocus(),
+            transformerNotationHighlight(),
+            transformerRemoveNotationEscape(),
+          ],
+        }),
+      )
+      .use(componentPlugin)
+      .use(sfcPlugin)
+      .use(headersPlugin)
+      .use(imgLazyload)
+    return instance
   }
   async renderMarkdown(
     src: string,
@@ -202,9 +213,10 @@ export class MarkdownInstance {
     sfcBlocks: MarkdownSfcBlocks
     patchedTemplateContentStripped?: string
   }> {
-    if (!this.md) {
+    if (!this.md || isPromise(this.md)) {
       await this.init()
     }
+    assert(this.md && !isPromise(this.md))
     let result = this.md!.render(src, env)
     if (!env.math) {
       return {
@@ -265,9 +277,10 @@ export class MarkdownInstance {
     result: string
     textContent: string
   }> {
-    if (!this.md) {
+    if (!this.md || isPromise(this.md)) {
       await this.init()
     }
+    assert(this.md && !isPromise(this.md))
     const env = {} as MarkdownRenderEnv
     const rendered = this.md!.renderInline(src, env)
     if (!env.math) {

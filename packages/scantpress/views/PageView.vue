@@ -173,7 +173,7 @@ watchEffect(async () => {
     pageSplash.value = ''
     const mod = await loader()
     pageSplash.value = mod.default
-  } catch (e) {
+  } catch {
     pageSplash.value = ''
   }
 })
@@ -183,14 +183,13 @@ const title = useTitle(() => page.value.data?.textTitle, {
 })
 
 if (ssrContext) {
-  const ctx: any = ssrContext
+  const ctx: SSRContext = ssrContext
   // this only retrieves the raw title without template formatting
   ctx.titlePrefix = title.value
   const meta: { [key: string]: string } = page.value.data?.meta ?? {}
   meta.description = (meta.description ?? page.value.data?.textExcerpt ?? '').trim()
   ctx.meta = meta
   ctx.time = page.value.data?.time ?? ''
-  ctx.author = (page.value.data?.data as any)?.author ?? ''
   ctx.sourceUrl = page.value.data?.sourceUrl ?? ''
 }
 const showTitle = ref(false)
