@@ -67,7 +67,7 @@ export default async function markdownContentGenerator(
         injectSetupCode('const __gitHistory = ' + gitHistory, sfcBlocks)
         injectHeaderData(headers, sfcBlocks)
 
-        return `<template><main data-pagefind-body class="md-content ${encodeURIComponent(frontmatter.data.title)} ${frontmatter.data.classes?.join(' ') || ''}">${templateContent}</main></template>${sfcBlocks.scriptSetup?.content}${sfcBlocks.script?.content || ''}${sfcBlocks.styles.map((x) => x.content) || ''}${sfcBlocks.customBlocks.map((x) => x.content).join('')}`
+        return `<template><main ${frontmatter.data.hidden ? '' : 'data-pagefind-body'} class="md-content ${encodeURIComponent(frontmatter.data.title)} ${frontmatter.data.classes?.join(' ') || ''}">${templateContent}</main></template>${sfcBlocks.scriptSetup?.content}${sfcBlocks.script?.content || ''}${sfcBlocks.styles.map((x) => x.content) || ''}${sfcBlocks.customBlocks.map((x) => x.content).join('')}`
       }
     },
     handleHotUpdate({ server, file }) {
