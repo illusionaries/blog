@@ -21,7 +21,10 @@ Object.keys(context.config.categories).forEach((category) => {
     title: context.config.categories[category]!,
     route: `/${category}/`,
     pageGroups: groupByYearMonth(
-      allPages.filter((page) => page.category === category).sort(pageEntryCompare),
+      allPages
+        .filter((page) => !page.hidden)
+        .filter((page) => page.category === category)
+        .sort(pageEntryCompare),
     ),
   })
 })

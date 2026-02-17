@@ -17,7 +17,10 @@ const base = computed(() => {
 })
 
 const pageGroups = computed(() => {
-  const pages = allPages.filter((page) => page.category === base.value).sort(pageEntryCompare)
+  const pages = allPages
+    .filter((page) => !page.hidden)
+    .filter((page) => page.category === base.value)
+    .sort(pageEntryCompare)
   return groupByYearMonth(pages)
 })
 

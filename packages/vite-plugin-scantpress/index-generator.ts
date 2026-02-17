@@ -33,7 +33,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
         })
         .map(async ({ entry, frontmatter }): Promise<PageData | undefined> => {
           if (!frontmatter) return undefined
-          if (frontmatter.data.hidden || frontmatter.data.isComponent) return undefined
+          if (frontmatter.data.isComponent) return undefined
           const entryToRoot = entry.replace(new RegExp(`^${toProjectRoot('./content')}`), '')
           const path = entryToRoot.replace(/index\.(?:md|vue)$/, '').replace(/\.(?:md|vue)/, '/')
           const slugs = path.split('/').filter((slug) => slug)
@@ -42,15 +42,17 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
           const { result: title, textContent: textTitle } = await md.renderMarkdownInline(
             data.title,
           )
+          const hidden = data.hidden ?? false
           const meta = data.meta
-          const slug = data.slug || path
+          const slug = data.slug ?? path
           const category = (slugs[0] in config.categories && slugs[0]) || undefined
           const tags = data.tags
-          const noExerpt = data.noExcerpt || false
-          const lang = data.lang || config.defaultLang
-          const classes = data.classes || []
+          const noExerpt = data.noExcerpt ?? false
+          const lang = data.lang ?? config.defaultLang
+          const classes = data.classes ?? []
           delete data.time
           delete data.title
+          delete data.hidden
           delete data.meta
           delete data.slug
           delete data.tags
@@ -62,6 +64,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
             textTitle,
             time,
             data,
+            hidden,
             meta,
             category,
             excerpt: noExerpt

@@ -19,7 +19,10 @@ Object.keys(context.config.categories).forEach((category) => {
   categories.push({
     title: context.config.categories[category]!,
     route: `/${category}/`,
-    pages: allPages.filter((page) => page.category === category).sort(pageEntryCompare),
+    pages: allPages
+      .filter((page) => !page.hidden)
+      .filter((page) => page.category === category)
+      .sort(pageEntryCompare),
   })
 })
 

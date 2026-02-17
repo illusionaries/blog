@@ -7,6 +7,7 @@ export interface PageData {
   category?: string
   contentUrl: string
   sourceUrl: string
+  hidden: boolean
   meta?: { [key: string]: string }
   data: { [key: string]: unknown }
   tags?: string[]

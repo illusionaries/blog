@@ -16,7 +16,10 @@ const currentTag = ref(decodeURIComponent(url.hash.slice(1)) || '')
 const allTags = Array.from(new Set(allPages.flatMap((page) => page.tags || [])))
 const displayingPages = computed(() => {
   if (loading.value) return []
-  return allPages.filter((page) => page.tags?.includes(currentTag.value)).sort(pageEntryCompare)
+  return allPages
+    .filter((page) => !page.hidden)
+    .filter((page) => page.tags?.includes(currentTag.value))
+    .sort(pageEntryCompare)
 })
 
 onMounted(() => {
