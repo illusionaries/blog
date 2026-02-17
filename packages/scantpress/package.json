@@ -31,6 +31,7 @@
     "vue-tsc": "catalog:framework"
   },
   "scripts": {
+    "//": "specifically use tsx to execute it in node environment",
     "build": "bunx tsx ./scripts/build.ts",
     "dev": "vite"
   }

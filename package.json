@@ -110,7 +110,7 @@
     "format": "prettier --write src/",
     "preview:ssg": "bunx serve dist/static -l 3001",
     "dev": "turbo dev",
-    "build": "turbo build",
+    "build": "turbo build --ui stream",
     "preview": "bun run build && bun run preview:ssg",
     "prepare": "husky"
   },
