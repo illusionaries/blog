@@ -17,7 +17,7 @@ time: 2026-02-18
 
 <WindowsButton />
 
-<div mx-auto text-xs w-max mt-1 text-subtle>我尽力还原了</div>
+<div mx-auto text-xs w-max max-w-full mt-1 text-subtle text-align-center>我尽力还原了</div>
 
 于是我开始尝试 WinForms。彼时的我根本不懂什么是 “布局”、什么是 “锚点”、什么是 “响应式”，只是惊叹于拖拽控件就可以运行的神奇。我第一次看到算法之外的代码世界：文件、进程、网络......一切都如此陌生，却又如此有趣。虽然成果异常粗糙，错误遍地都是，但是探索着的我很满足。
 
@@ -32,6 +32,8 @@ time: 2026-02-18
 其实我是个很三分钟热度的人。曾经试过各种运动，篮球、乒乓、羽毛球，没有一个坚持到现在。至于健身、减肥，也是三天打鱼两天晒网。我画出过不少满意的设计稿，热情却在完成的同时消散。我无法写下实现设计稿的代码，烂尾对我而言可能是常态。
 
 ![曾经幻想过的博客设计稿](./unfinished-design.webp)
+
+<div mx-auto text-xs w-max max-w-full mt-1 text-subtle text-align-center>曾经幻想过的博客设计稿</div>
 
 前两天某群友说了这两句话，我思考了一晚，写下这篇文章。
 
