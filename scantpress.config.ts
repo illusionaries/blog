@@ -12,6 +12,7 @@ export default defineConfig({
   categories: {
     blog: '博客',
     notes: '笔记',
+    memos: '备忘录',
     life: '生活',
     articles: '文章',
   },
