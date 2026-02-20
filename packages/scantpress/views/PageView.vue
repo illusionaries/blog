@@ -58,7 +58,6 @@ type PageState = {
 const progressBar = useTemplateRef('progressbar')
 
 const page = computed<PageState>(() => {
-  progressBar.value?.start()
   const path = decodeURIComponent(route.path)
   const pathWithoutTrailingSplash = path.replace(/\/$/, '')
   const slugs = path.split('/').filter((slug) => slug)
@@ -76,7 +75,6 @@ const page = computed<PageState>(() => {
       ) ?? ''
     ]
   if (slugs[0] === 'tags') {
-    progressBar.value?.end()
     return {
       data: {
         title: '标签',
@@ -87,7 +85,6 @@ const page = computed<PageState>(() => {
     }
   }
   if (testIndexPage(slugs)) {
-    progressBar.value?.end()
     return {
       data: {
         title: category,
@@ -129,10 +126,6 @@ const page = computed<PageState>(() => {
     return undefined
   })()
   if (module) {
-    // eslint-disable-next-line vue/no-async-in-computed-properties
-    module.finally(() => {
-      progressBar.value?.end()
-    })
     const outline = usePromiseResult<MarkdownItHeader[]>(
       // eslint-disable-next-line vue/no-async-in-computed-properties
       module.then((x) => x.__headers ?? []),
@@ -144,7 +137,12 @@ const page = computed<PageState>(() => {
         time: dateString(page?.time),
       },
       Content: defineAsyncComponent({
-        loader: () => module,
+        loader: async () => {
+          progressBar.value?.start()
+          const loaded = await module
+          progressBar.value?.end()
+          return loaded
+        },
         loadingComponent: LoadingView,
         errorComponent: ErrorLoadingView,
       }),
@@ -152,7 +150,6 @@ const page = computed<PageState>(() => {
       splash,
     }
   }
-  progressBar.value?.end()
   return {
     data: (page as Partial<PageData>) ?? undefined,
     Content: NotFoundView,
