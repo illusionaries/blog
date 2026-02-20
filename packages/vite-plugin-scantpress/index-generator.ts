@@ -29,8 +29,9 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
               return { entry, frontmatter: { data: frontmatterData, excerpt } }
             }
           }
-          return { entry, frontmatter: undefined }
+          return undefined
         })
+        .filter((x) => x !== undefined)
         .map(async ({ entry, frontmatter }): Promise<PageData | undefined> => {
           if (!frontmatter) return undefined
           if (frontmatter.data.isComponent) return undefined

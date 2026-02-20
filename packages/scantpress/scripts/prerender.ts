@@ -54,9 +54,10 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
             if (frontmatter.slug) {
               return `${frontmatter.slug}${frontmatter.slug.endsWith('/') ? '' : '/'}`
             }
+            return target
           }
         }
-        return target
+        return undefined
       })
       .filter((x) => x !== undefined),
   )
