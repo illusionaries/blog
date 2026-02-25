@@ -17,7 +17,7 @@ export default defineConfig({
     articles: '文章',
   },
   name: '彩笔的部落阁',
-  theme: 'new-year',
+  theme: 'normal',
   pureStatic: true,
   git: {
     repo: 'illusionaries/blog',
