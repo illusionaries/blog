@@ -50,6 +50,7 @@ const friends: Friend[] = [
       <a
         :href="friend.link"
         target="_blank"
+        class="no-marker"
         grid="~ cols-[auto_1fr] gap-2"
         text-unset
         decoration-none>
