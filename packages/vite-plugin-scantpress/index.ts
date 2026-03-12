@@ -1,4 +1,5 @@
-import contentRenderer from './content-renderer.js'
+import markdownHandler from './markdown-handler.js'
+import typstHandler from './typst-handler.js'
 import indexGenerator from './index-generator.js'
 import contextPlugin from './context-plugin.js'
 import UnoCSS from '@unocss/vite'
@@ -16,7 +17,8 @@ export default async function ScantPress(): Promise<PluginOption[]> {
   }
 
   return [
-    await contentRenderer(configWithPath),
+    await markdownHandler(configWithPath),
+    typstHandler(),
     indexGenerator(configWithPath),
     contextPlugin(configWithPath),
     UnoCSS({

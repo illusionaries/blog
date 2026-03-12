@@ -25,7 +25,8 @@
     "markdown-it-footnote": "catalog:markdown",
     "mathjax": "catalog:markdown",
     "shiki": "catalog:markdown",
-    "unocss": "catalog:framework"
+    "unocss": "catalog:framework",
+    "cheerio": "catalog:build"
   },
   "devDependencies": {
     "@types/js-yaml": "catalog:build",

@@ -14,7 +14,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
   return (
     await Promise.all(
       fg
-        .sync(toProjectRoot(`./content/**/*.(md|vue)`))
+        .sync(toProjectRoot(`./content/**/*.(md|vue|typ)`))
         .map((entry) => {
           if (entry.endsWith('.md')) {
             return { entry, frontmatter: matter.read(entry, { excerpt: true }) }
@@ -36,7 +36,9 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
           if (!frontmatter) return undefined
           if (frontmatter.data.isComponent) return undefined
           const entryToRoot = entry.replace(new RegExp(`^${toProjectRoot('./content')}`), '')
-          const path = entryToRoot.replace(/index\.(?:md|vue)$/, '').replace(/\.(?:md|vue)/, '/')
+          const path = entryToRoot
+            .replace(/index\.(?:md|vue|typ)$/, '')
+            .replace(/\.(?:md|vue|typ)/, '/')
           const slugs = path.split('/').filter((slug) => slug)
           const data = frontmatter.data
           const time = data.time

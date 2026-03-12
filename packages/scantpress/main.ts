@@ -15,7 +15,7 @@ import { ClientOnly } from './components/ClientOnly'
 import { PageModulesInjectionKey, PageSplashesInjectionKey } from './injection'
 import type { Module } from './module'
 
-const pageModules = import.meta.glob(['./**/*.md', './**/*.vue'], {
+const pageModules = import.meta.glob(['./**/*.md', './**/*.vue', './**/*.typ'], {
   base: '../../content/',
 }) as Record<string, () => Promise<Module<never>>>
 

@@ -37,11 +37,11 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
       return target
     }),
     ...fg
-      .sync(toProjectRoot('./content/**/*.vue'))
+      .sync(toProjectRoot('./content/**/*.(vue|typ)'))
       .map((file) => {
         const target = file
-          .replace(/\/index\.vue$/, '/')
-          .replace(/\.vue$/, '/')
+          .replace(/\/index\.(?:vue|typ)$/, '/')
+          .replace(/\.(?:vue|typ)$/, '/')
           .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
         const frontmatterCandidates = [file + '.yaml', file + '.yml']
         for (const candidate of frontmatterCandidates) {

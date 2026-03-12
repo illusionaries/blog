@@ -38,13 +38,13 @@ const getGitHistory = async (filename: string): Promise<string> => {
   return `[${result.trim().slice(0, -1)}]`
 }
 
-export default async function markdownContentGenerator(
+export default async function markdownHandler(
   config: SiteConfiguration & { root: string },
 ): Promise<PluginOption> {
   const md = new MarkdownInstance(config)
   await md.init()
   return {
-    name: 'scantpress:content-renderer',
+    name: 'scantpress:markdown-handler',
     enforce: 'pre',
     async transform(code, id) {
       if (id.endsWith('.md')) {

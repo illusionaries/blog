@@ -15,7 +15,7 @@ export default defineConfig({
     // this includes unocss
     ScantPress(),
     vue({
-      include: [/\.vue$/, /\.md$/],
+      include: [/\.vue$/, /\.md$/, /\.typ$/],
       template: {
         compilerOptions: {
           // mathjax containers

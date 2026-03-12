@@ -29,11 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # to include all history for .git info
-      - name: Set up Bun
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
       - name: Install dependencies
         run: bun install
       - name: Build

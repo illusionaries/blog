@@ -73,6 +73,7 @@
         "@shikijs/markdown-it": "catalog:markdown",
         "@shikijs/transformers": "catalog:markdown",
         "@unocss/vite": "catalog:framework",
+        "cheerio": "catalog:build",
         "fast-glob": "catalog:build",
         "gray-matter": "catalog:build",
         "image-size": "catalog:build",

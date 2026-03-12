@@ -33,10 +33,10 @@ export async function sitemap(config: SiteConfiguration & { root: string }) {
           priority: 0.5,
         }
       }),
-    ...fg.sync(toProjectRoot(`./content/**/*.vue`)).map((file) => {
+    ...fg.sync(toProjectRoot(`./content/**/*.(vue|typ)`)).map((file) => {
       const url = file
-        .replace(/\/index\.vue$/, '/')
-        .replace(/\.vue$/, '/')
+        .replace(/\/index\.(?:vue|typ)$/, '/')
+        .replace(/\.(?:vue|typ)$/, '/')
         .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
       const frontmatterCandidates = [file + '.yaml', file + '.yml']
       for (const candidate of frontmatterCandidates) {
