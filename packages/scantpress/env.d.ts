@@ -10,7 +10,7 @@ declare module 'virtual:context' {
   import type { SiteConfiguration } from '@scantpress/shared'
   const context: {
     githubSHA: string
-    config: SiteConfiguration
+    config: SiteConfiguration & { root: string }
   }
   export default context
 }

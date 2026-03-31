@@ -19,6 +19,7 @@ export interface SiteConfiguration {
     github?: string
     email?: string
   }
+  additionalHeads?: string[]
 }
 
 export function defineConfig(config: SiteConfiguration): SiteConfiguration {

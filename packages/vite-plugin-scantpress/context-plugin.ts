@@ -2,7 +2,7 @@ import type { SiteConfiguration } from '@scantpress/shared'
 import { env } from 'process'
 import { Plugin } from 'vite'
 
-export default function ContextPlugin(config: SiteConfiguration): Plugin {
+export default function ContextPlugin(config: SiteConfiguration & { root: string }): Plugin {
   const virtualModuleId = 'virtual:context'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 

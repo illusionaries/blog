@@ -64,13 +64,13 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
 
   // pre-render each route...
   for (const url of routesToPrerender) {
-    const [appHtml, preloadLinks, titlePrefix, meta, lang] = await render(url, manifest)
+    const [appHtml, additionalHead, titlePrefix, meta, lang] = await render(url, manifest)
     let html = template
     if (url === '/') {
       html = template.replace(`<!--title-prefix--> | <!--title-suffix-->`, config.name)
     }
     html = html
-      .replace(`<!--preload-links-->`, preloadLinks)
+      .replace(`<!--additional-head-->`, additionalHead)
       .replace(`<!--app-html-->`, appHtml)
       .replace(`<!--title-prefix-->`, titlePrefix)
       .replace(`<!--meta-->`, meta)
