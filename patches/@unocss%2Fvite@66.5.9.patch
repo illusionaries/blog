@@ -13,7 +13,7 @@ index e5fd0515ad2345073b54972ae2f6c0e83a35020f..1c95a22c781f06a6c4516c18a8269f11
      },
      async transform(code, id) {
 -      if (!filter(id) || !id.endsWith(".vue"))
-+      if (!filter(id) || !(id.endsWith(".vue") || id.endsWith(".md")))
++      if (!filter(id) || !(id.endsWith(".vue") || id.endsWith(".md") || id.endsWith(".typ")))
          return;
        const css = await transformSFC(code);
        if (css) {

@@ -161,3 +161,16 @@ mark {
 li::marker {
   color: rgb(from currentColor r g b / 0.4);
 }
+
+.typst-math-display {
+  overflow-x: auto;
+}
+
+.typst-math-display > svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.typst-math-inline {
+  vertical-align: middle;
+}

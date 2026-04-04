@@ -16,7 +16,7 @@
   }
 }
 
-pre.shiki {
+pre {
   --at-apply: rounded-md p-y-3 overflow-auto m-y-2;
 }
 

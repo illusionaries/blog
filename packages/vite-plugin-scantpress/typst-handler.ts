@@ -5,6 +5,8 @@ import { existsSync } from 'fs'
 import * as fs from 'fs/promises'
 import yaml from 'js-yaml'
 import { dirname } from 'path'
+import { MarkdownItHeader } from '@mdit-vue/plugin-headers'
+import { slugify } from '@mdit-vue/shared'
 
 const preReplaceRe = /(<pre(?:(?!v-pre)[\s\S])*?)>/gm
 
@@ -54,12 +56,35 @@ export default function typstHandler(): PluginOption {
         }
 
         const content = `
-#show math.equation.where(block: false): it => {
-  html.span(html.frame(it), class: "typst-math-inline", role: "math")
+#show math.equation.where(block: false): it => context {
+  if target() == "html" {
+    html.span(html.frame(it), class: "typst-math-inline", role: "math")
+  } else {
+    it
+  }
+}
+  
+#show math.equation.where(block: true): it => context {
+  if target() == "html" {
+    html.div(html.frame(it), class: "typst-math-display", role: "math")
+  } else {
+    it
+  }
 }
 
-#show math.equation.where(block: true): it => {
-  html.div(html.frame(it), class: "typst-math-display", role: "math")
+#let typst_align = align
+#let align(alignment, body) = context {
+  if target() == "html" {
+    html.div(
+      body,
+      style: "display: flex; justify-content: "
+        + if alignment == left { "flex-start" } else if alignment == center { "center" } else if alignment == right {
+          "flex-end"
+        } else { "flex-start" },
+    )
+  } else {
+    typst_align(alignment, body)
+  }
 }
 
 ${code}
@@ -87,6 +112,39 @@ ${code}
         })
 
         const $ = load(html)
+        const slugs = {} as Record<string, number>
+        const headers = Array.from($('h2, h3')).map<MarkdownItHeader>((el) => {
+          const header = $(el)
+          const text = header.text()
+          let slug = encodeURIComponent(slugify(text))
+          if (slug in slugs) {
+            slugs[slug] += 1
+            slug += `-${slugs[slug]}`
+          } else {
+            slugs[slug] = 0
+          }
+          header.attr('id', slug)
+          return {
+            level: parseInt(el.tagName[1]),
+            title: text,
+            slug,
+            link: `#${slug}`,
+            // do not actually need nesting, since we will be expanding all
+            // headers later anyway.
+            children: [],
+          }
+        })
+        const mapElementTags = {
+          expandercomponent: 'ExpanderComponent',
+          clientonly: 'ClientOnly',
+          badge: 'Badge',
+        }
+        for (const [tag, component] of Object.entries(mapElementTags)) {
+          $(tag).each((_, el) => {
+            // @ts-expect-error cannot infer type
+            el.tagName = component
+          })
+        }
         const body = $('body').html()
 
         const templateContent =
@@ -94,8 +152,9 @@ ${code}
           '\n\n<hr>\n' +
           `<h2>文件历史</h2><GitHistory :history='__gitHistory' />`
         const scriptSetup = `const __gitHistory = ${gitHistory}`
+        const script = `export const __headers = ${JSON.stringify(headers)}`
         // TODO: headers
-        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template><script setup>${scriptSetup}</script>`
+        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="rendered-content typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template><script setup>${scriptSetup}</script><script>${script}</script>`
       }
     },
     handleHotUpdate({ server, file }) {

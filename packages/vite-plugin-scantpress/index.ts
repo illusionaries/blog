@@ -23,6 +23,11 @@ export default async function ScantPress(): Promise<PluginOption[]> {
     contextPlugin(configWithPath),
     UnoCSS({
       mode: 'vue-scoped',
+      content: {
+        pipeline: {
+          include: [/\.(vue|svelte|[jt]sx|vine.ts|mdx?|astro|elm|php|phtml|marko|html|typ)($|\?)/],
+        },
+      },
       presets: [
         presetWind3({
           dark: 'media',
