@@ -21,7 +21,7 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
   const template = fs.readFileSync(toProjectRoot('dist/static/index.html'), 'utf-8')
   const { render } = await import(toProjectRoot('dist/server/entry-server.js'))
 
-  const routesToPrerender = ['/', '/404.html']
+  const routesToPrerender = ['/', '/404.html', '/tags/']
 
   routesToPrerender.push(...Object.keys(config.categories).map((category) => `/${category}/`))
   routesToPrerender.push(
