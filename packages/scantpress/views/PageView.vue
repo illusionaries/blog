@@ -175,7 +175,7 @@ watchEffect(async () => {
   }
 })
 
-const title = useTitle(() => page.value.data?.textTitle, {
+const title = useTitle(() => page.value.data?.textTitle ?? page.value.data?.title, {
   titleTemplate: `%s | ${context.config.name}`,
 })
 
