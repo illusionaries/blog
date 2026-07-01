@@ -1,50 +1,59 @@
 <script setup lang="ts">
 import type { MarkdownItHeader } from '@mdit-vue/plugin-headers'
-import { useTemplateRef, watch } from 'vue'
+import { onServerPrefetch, shallowRef, useTemplateRef, watchEffect } from 'vue'
 
 const props = defineProps<{
-  pageOutline?: MarkdownItHeader[]
-  highlightedSlug: string
+  pageOutline?: Promise<MarkdownItHeader[]>
+  highlightedSlug?: string
 }>()
 
 const marker = useTemplateRef('marker')
 const anchors = useTemplateRef<HTMLAnchorElement[]>('anchors')
 
-watch(
-  () => props.highlightedSlug,
-  (newVal) => {
-    if (!marker.value || !anchors.value) return
-    if (!newVal) {
-      marker.value.style.opacity = '0'
-      marker.value.style.top = '0'
-    } else {
-      const target = anchors.value.find((anchor) => anchor.href.endsWith(`#${newVal}`))
-      if (target) {
-        marker.value.style.opacity = '1'
-        marker.value.style.top = `${target.parentElement?.offsetTop}px`
-      } else {
-        marker.value.style.opacity = '0'
-      }
-    }
-  },
-)
+const resolvedOutline = shallowRef<MarkdownItHeader[] | undefined>(undefined)
 
-watch(
-  () => props.pageOutline,
-  () => {
-    if (!marker.value) return
+watchEffect(() => {
+  const highlighted = props.highlightedSlug
+  if (!marker.value || !anchors.value) return
+  if (!highlighted) {
     marker.value.style.opacity = '0'
     marker.value.style.top = '0'
-  },
-  {
-    immediate: true,
-  },
-)
+  } else {
+    const target = anchors.value.find((anchor) => anchor.href.endsWith(`#${highlighted}`))
+    if (target) {
+      marker.value.style.opacity = '1'
+      marker.value.style.top = `${target.parentElement?.offsetTop}px`
+    } else {
+      marker.value.style.opacity = '0'
+    }
+  }
+})
+
+watchEffect(() => {
+  if (!marker.value || resolvedOutline.value === undefined) return
+  marker.value.style.opacity = '0'
+  marker.value.style.top = '0'
+})
+
+watchEffect(async (onCleanup) => {
+  resolvedOutline.value = undefined
+  let aborted = false
+  onCleanup(() => {
+    aborted = true
+  })
+  const resolvedValue = await props.pageOutline
+  if (aborted) return
+  resolvedOutline.value = resolvedValue
+})
+
+onServerPrefetch(async () => {
+  if (props.pageOutline) resolvedOutline.value = await props.pageOutline
+})
 </script>
 
 <template>
   <nav
-    :class="[pageOutline?.length ? 'w-64' : 'w-0 opacity-0']"
+    :class="[resolvedOutline?.length ? 'w-64' : 'w-0 opacity-0']"
     class="transition-[width,opacity]"
     duration-300
     delay-300
@@ -83,7 +92,7 @@ watch(
           animate-both
           class="animate-[fade-in-up]"
           animate-duration-300
-          v-for="(header, index) in pageOutline"
+          v-for="(header, index) in resolvedOutline"
           :key="header.slug"
           :style="{
             marginLeft: `${(header.level - 1) * 1}rem`,

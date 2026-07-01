@@ -1,24 +1,27 @@
 <script setup lang="ts">
-import type { PageData } from '@app/data/pagedata'
+import type { PageData } from '@scantpress/shared'
 import TagList from './TagList.vue'
-import { onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
+import { onMounted, onServerPrefetch, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 
 const props = defineProps<{
   pageData?: Partial<PageData>
-  splash?: (() => Promise<{ default: string }>) | null | undefined
+  splash?: Promise<{ default: string }> | undefined
 }>()
 
-const splashImage = ref<string | undefined>(undefined)
+const resolvedSplash = ref<string | undefined>(undefined)
 
 // only takeover layout on clientSide, after mounted
 const takeOverLayout = ref(false)
 
-watchEffect(async () => {
+watchEffect(async (onCleanup) => {
+  resolvedSplash.value = undefined
+  let aborted = false
+  onCleanup(() => {
+    aborted = true
+  })
   if (props.splash) {
-    const result = await props.splash()
-    splashImage.value = result.default
-  } else {
-    splashImage.value = undefined
+    const result = await props.splash
+    if (!aborted) resolvedSplash.value = result.default
   }
 })
 
@@ -42,6 +45,10 @@ onUnmounted(() => {
     observer.disconnect()
   }
 })
+
+onServerPrefetch(async () => {
+  if (props.splash) resolvedSplash.value = (await props.splash).default
+})
 </script>
 
 <template>
@@ -50,17 +57,17 @@ onUnmounted(() => {
     relative
     duration-500
     ease-fast-in
-    :class="{ 'm-t-16 lg:m-t-12': !splashImage }"
+    :class="{ 'm-t-16 lg:m-t-12': !resolvedSplash }"
     :style="{
-      height: `${splashImage ? '26rem' : takeOverLayout ? textSectionHeight + 'px' : 'auto'}`,
+      height: `${resolvedSplash ? '26rem' : takeOverLayout ? textSectionHeight + 'px' : 'auto'}`,
     }">
     <div
       relative
       transition-height
       duration-500
       ease-fast-in
-      :class="[splashImage ? 'h-104' : 'h-0']">
-      <img v-if="splashImage" h-full w-full object-cover :src="splashImage" />
+      :class="[resolvedSplash ? 'h-104' : 'h-0']">
+      <img v-if="resolvedSplash" h-full w-full object-cover :src="resolvedSplash" />
       <div
         absolute
         top-0
@@ -69,7 +76,7 @@ onUnmounted(() => {
         bottom-0
         backdrop-blur-3xl
         class="bg-black/40"
-        v-if="splashImage"
+        v-if="resolvedSplash"
         style="mask: linear-gradient(transparent, black 70%)"></div>
     </div>
 
@@ -79,12 +86,12 @@ onUnmounted(() => {
       m-auto
       box-border
       transition-colors-500
-      :class="{ 'text-white/85 text-shadow-sm': splashImage }">
+      :class="{ 'text-white/85 text-shadow-sm': resolvedSplash }">
       <div
         max-w-840px
         p-x-6
         lg:p-x-12
-        :class="[splashImage ? 'bottom-6' : 'top-0', { absolute: takeOverLayout }]"
+        :class="[resolvedSplash ? 'bottom-6' : 'top-0', { absolute: takeOverLayout }]"
         ref="text-section-wrapper">
         <TagList
           :stateful="false"

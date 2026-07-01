@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from '@app/router/router'
 import {
-  computed,
   defineAsyncComponent,
   inject,
   onMounted,
@@ -11,17 +10,15 @@ import {
   useTemplateRef,
   watchEffect,
   watch,
+  shallowRef,
+  type Component,
+  onServerPrefetch,
 } from 'vue'
 import Giscus from '@giscus/vue'
 import NotFoundView from '@app/views/NotFoundView.vue'
 import { useTitle } from '@vueuse/core'
 import type { MarkdownItHeader } from '@mdit-vue/plugin-headers'
-import {
-  dateString,
-  isIndexPage as testIndexPage,
-  throttleAndDebounce,
-  usePromiseResult,
-} from '@app/utils'
+import { dateString, isIndexPage as testIndexPage, throttleAndDebounce } from '@app/utils'
 import PageListView from './PageListView.vue'
 import SidebarComponent from '@app/components/SidebarComponent.vue'
 import TopbarComponent from '@app/components/TopbarComponent.vue'
@@ -47,17 +44,27 @@ const pageSplashes = inject(PageSplashesInjectionKey)!
 const route = useRoute(() => document.scrollingElement?.scrollTop)
 const PAGE_MODULE_COMMON_PREFIX = '.'
 
-type PageState = {
-  data?: Partial<PageData>
-  isIndex?: boolean
-  Content: unknown
-  outline?: import('vue').Ref<MarkdownItHeader[]> | undefined
-  splash?: (() => Promise<{ default: string }>) | null | undefined
-}
+const pageData = ref<Partial<PageData> | undefined>(undefined)
+const isIndex = ref<boolean | undefined>(undefined)
+const Content = shallowRef<Component | undefined>(undefined)
+const outline = shallowRef<Promise<MarkdownItHeader[]> | undefined>(undefined)
+const splash = shallowRef<Promise<{ default: string }> | undefined>(undefined)
+
+const resolvedOutline = shallowRef<MarkdownItHeader[] | undefined>(undefined)
+watchEffect(async (onCleanup) => {
+  resolvedOutline.value = undefined
+  let aborted = false
+  onCleanup(() => {
+    aborted = true
+  })
+  const resolvedValue = await outline.value
+  if (aborted) return
+  resolvedOutline.value = resolvedValue
+})
 
 const progressBar = useTemplateRef('progressbar')
 
-const page = computed<PageState>(() => {
+watchEffect(() => {
   const path = decodeURIComponent(route.path)
   const pathWithoutTrailingSplash = path.replace(/\/$/, '')
   const slugs = path.split('/').filter((slug) => slug)
@@ -68,47 +75,49 @@ const page = computed<PageState>(() => {
     ssrContext!.lang = page?.lang ?? context.config.defaultLang
   }
   const category = context.config.categories[slugs[0]!]
-  const splash =
+  const currentSplash =
     pageSplashes[
       Object.keys(pageSplashes).find((key) =>
         key.startsWith(`${PAGE_MODULE_COMMON_PREFIX}${pathWithoutTrailingSplash}/splash.`),
       ) ?? ''
     ]
+  splash.value = currentSplash?.()
+  outline.value = undefined
+  pageData.value = undefined
+  isIndex.value = undefined
+  Content.value = undefined
+
   if (slugs[0] === 'tags') {
-    return {
-      data: {
-        title: '标签',
-      } as Partial<PageData>,
-      isIndex: true,
-      Content: TagsView,
-      splash,
+    pageData.value = {
+      title: '标签',
     }
+    isIndex.value = true
+    Content.value = TagsView
+    return
   }
   if (testIndexPage(slugs)) {
-    return {
-      data: {
-        title: category,
-        time: (() => {
-          const allPagesInCategory = allPages
-            .filter((p) => p.category === slugs[0])
-            .sort((a, b) => {
-              return new Date(a.time).getTime() - new Date(b.time).getTime()
-            })
-          if (allPagesInCategory.length === 0) return ''
-          else if (allPagesInCategory.length === 1) return dateString(allPagesInCategory[0]!.time)
-          else
-            return (
-              dateString(allPagesInCategory[0]!.time) +
-              ' – ' +
-              dateString(allPagesInCategory[allPagesInCategory.length - 1]!.time)
-            )
-        })(),
-        category,
-      } as Partial<PageData>,
-      isIndex: true,
-      Content: PageListView,
-      splash,
+    pageData.value = {
+      title: category,
+      time: (() => {
+        const allPagesInCategory = allPages
+          .filter((p) => p.category === slugs[0])
+          .sort((a, b) => {
+            return new Date(a.time).getTime() - new Date(b.time).getTime()
+          })
+        if (allPagesInCategory.length === 0) return ''
+        else if (allPagesInCategory.length === 1) return dateString(allPagesInCategory[0]!.time)
+        else
+          return (
+            dateString(allPagesInCategory[0]!.time) +
+            ' – ' +
+            dateString(allPagesInCategory[allPagesInCategory.length - 1]!.time)
+          )
+      })(),
+      category,
     }
+    isIndex.value = true
+    Content.value = PageListView
+    return
   }
   const module = (() => {
     if (page?.sourceUrl) return pageModules[PAGE_MODULE_COMMON_PREFIX + page.sourceUrl]!()
@@ -126,56 +135,28 @@ const page = computed<PageState>(() => {
     return undefined
   })()
   if (module) {
-    const outline = usePromiseResult<MarkdownItHeader[]>(
-      // eslint-disable-next-line vue/no-async-in-computed-properties
-      module.then((x) => x.__headers ?? []),
-      [],
-    )
-    return {
-      data: {
-        ...page,
-        time: dateString(page?.time),
-      },
-      Content: defineAsyncComponent({
-        loader: async () => {
-          progressBar.value?.start()
-          const loaded = await module
-          progressBar.value?.end()
-          return loaded
-        },
-        loadingComponent: LoadingView,
-        errorComponent: ErrorLoadingView,
-      }),
-      outline,
-      splash,
+    outline.value = module.then((x) => x.__headers ?? [])
+    pageData.value = {
+      ...page,
+      time: dateString(page?.time),
     }
-  }
-  return {
-    data: (page as Partial<PageData>) ?? undefined,
-    Content: NotFoundView,
-    outline: ref<MarkdownItHeader[]>([]),
-    isIndex: false,
-    splash,
-  }
-})
-
-const pageSplash = ref('')
-watchEffect(async () => {
-  const loader = page.value.splash
-  if (!loader) {
-    pageSplash.value = ''
+    Content.value = defineAsyncComponent({
+      loader: async () => {
+        progressBar.value?.start()
+        const loaded = await module
+        progressBar.value?.end()
+        return loaded
+      },
+      loadingComponent: LoadingView,
+      errorComponent: ErrorLoadingView,
+    })
     return
   }
-  try {
-    pageSplash.value = ''
-    const mod = await loader()
-    pageSplash.value = mod.default
-  } catch {
-    pageSplash.value = ''
-  }
+  Content.value = NotFoundView
+  isIndex.value = true
 })
 
-const title = useTitle(() => page.value.data?.textTitle ?? page.value.data?.title, {
+const title = useTitle(() => pageData.value?.textTitle ?? pageData.value?.title, {
   titleTemplate: `%s | ${context.config.name}`,
 })
 
@@ -183,16 +164,16 @@ if (ssrContext) {
   const ctx: SSRContext = ssrContext
   // this only retrieves the raw title without template formatting
   ctx.titlePrefix = title.value
-  const meta: { [key: string]: string } = page.value.data?.meta ?? {}
-  meta.description = (meta.description ?? page.value.data?.textExcerpt ?? '').trim()
+  const meta: { [key: string]: string } = pageData.value?.meta ?? {}
+  meta.description = (meta.description ?? pageData.value?.textExcerpt ?? '').trim()
   ctx.meta = meta
-  ctx.time = page.value.data?.time ?? ''
-  ctx.sourceUrl = page.value.data?.sourceUrl ?? ''
+  ctx.time = pageData.value?.time ?? ''
+  ctx.sourceUrl = pageData.value?.sourceUrl ?? ''
 }
 const showTitle = ref(false)
 const documentWrapper = useTemplateRef('document-wrapper')
 const sidebarRef = useTemplateRef('sidebar-ref')
-const highlightedSlug = ref('')
+const highlightedSlug = ref<string | undefined>(undefined)
 let headerElements: Element[] = []
 
 onMounted(() => {
@@ -213,13 +194,8 @@ const handleScroll = throttleAndDebounce(() => {
   } else {
     showTitle.value = false
   }
-  if (!page.value.outline?.value?.length) return
+  if (!resolvedOutline.value?.length) return
   if (!documentWrapper.value) return
-  if (!validateHeaderElements()) {
-    headerElements = [
-      ...(documentWrapper.value.querySelectorAll('h1, h2, h3, h4, h5, h6') ?? []),
-    ].filter((x) => page.value.outline?.value?.some((y) => y.slug == x.id))
-  }
   const elements = headerElements
     .map((x) => {
       return {
@@ -232,17 +208,9 @@ const handleScroll = throttleAndDebounce(() => {
   highlightedSlug.value = elements[0]?.slug ?? ''
   // if scrolled to bottom, highlight the last item
   if (Math.abs(scrollTop + window.innerHeight - documentWrapper.value.clientHeight) < 1) {
-    highlightedSlug.value = page.value.outline.value.slice(-1)[0]!.slug
+    highlightedSlug.value = resolvedOutline.value?.slice(-1)[0]!.slug
   }
 }, 100)
-
-function validateHeaderElements() {
-  if (headerElements.length !== page.value.outline?.value?.length) return false
-  for (let i = 0; i < headerElements.length; i++) {
-    if (headerElements[i]!.id !== page.value.outline?.value?.[i]!.slug) return false
-  }
-  return true
-}
 
 watch(
   () => route.hash,
@@ -257,30 +225,38 @@ const handleDynamicComponentMounted = () => {
   const anchor = document.getElementById(hash.substring(1))
   if (anchor) window.scrollTo({ top: anchor.offsetTop - 40, behavior: 'smooth' })
   else window.scrollTo({ top: route.scrollTop, behavior: 'instant' })
+  if (!documentWrapper.value) return
+  headerElements = [
+    ...(documentWrapper.value.querySelectorAll('h1, h2, h3, h4, h5, h6') ?? []),
+  ].filter((x) => resolvedOutline.value?.some((y) => y.slug == x.id))
 }
 
 const isDev = import.meta.env.DEV
+
+onServerPrefetch(async () => {
+  if (outline.value) resolvedOutline.value = await outline.value
+})
 </script>
 
 <template>
   <div lg:grid class="lg:grid-cols-[auto_1fr_auto]" overflow-auto>
     <ProgressBar ref="progressbar" />
-    <SidebarComponent ref="sidebar-ref" :current-title="page.data?.title" />
+    <SidebarComponent ref="sidebar-ref" :current-title="pageData?.title" />
     <div overflow-auto box-border ref="document-wrapper">
       <div>
         <TopbarComponent
           :toggleSidebarFn="sidebarRef?.toggleSidebar"
-          :title="page.data?.title ?? page.data?.category ?? ''"
+          :title="pageData?.title ?? pageData?.category ?? ''"
           :show-title="showTitle" />
         <div m-b-8 m-x-auto relative>
-          <SplashSection :page-data="page.data" :splash="page.splash" />
+          <SplashSection :page-data="pageData" :splash="splash" />
         </div>
         <div class="max-w-840px m-x-auto box-border p-x-6 lg:p-x-12 content-wrapper">
           <Transition mode="out-in" name="fade-in">
-            <component :is="page.Content" @vue:mounted="handleDynamicComponentMounted" />
+            <component :is="Content" @vue:mounted="handleDynamicComponentMounted" />
           </Transition>
           <ClientOnly>
-            <div m-t-12 v-if="!page.isIndex && !isDev" id="comments">
+            <div m-t-12 v-if="!isIndex && !isDev" id="comments">
               <Giscus
                 :key="route.path"
                 repo="illusionaries/blog"
@@ -301,11 +277,7 @@ const isDev = import.meta.env.DEV
         </div>
       </div>
     </div>
-    <PageOutline
-      hidden
-      xl:block
-      :page-outline="page.outline?.value"
-      :highlighted-slug="highlightedSlug" />
+    <PageOutline hidden xl:block :page-outline="outline" :highlighted-slug="highlightedSlug" />
   </div>
 </template>
 

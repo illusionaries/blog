@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PageData } from '@app/data/pagedata'
+import type { PageData } from '@scantpress/shared'
 import { dateString } from '@app/utils'
 
 defineProps<{
