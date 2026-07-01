@@ -56,22 +56,6 @@ export default function typstHandler(): PluginOption {
         }
 
         const content = `
-#show math.equation.where(block: false): it => context {
-  if target() == "html" {
-    html.span(html.frame(it), class: "typst-math-inline", role: "math")
-  } else {
-    it
-  }
-}
-  
-#show math.equation.where(block: true): it => context {
-  if target() == "html" {
-    html.div(html.frame(it), class: "typst-math-display", role: "math")
-  } else {
-    it
-  }
-}
-
 #let typst_align = align
 #let align(alignment, body) = context {
   if target() == "html" {
@@ -111,7 +95,11 @@ ${code}
           process.on('error', (err) => reject(err))
         })
 
-        const $ = load(html)
+        const $ = load(html, {
+          // @ts-expect-error: this is not present in types, but actually works.
+          lowerCaseTags: false,
+          _useHtmlParser2: true,
+        })
         const slugs = {} as Record<string, number>
         const headers = Array.from($('h2, h3')).map<MarkdownItHeader>((el) => {
           const header = $(el)
@@ -134,18 +122,10 @@ ${code}
             children: [],
           }
         })
-        const mapElementTags = {
-          expandercomponent: 'ExpanderComponent',
-          clientonly: 'ClientOnly',
-          badge: 'Badge',
-        }
-        for (const [tag, component] of Object.entries(mapElementTags)) {
-          $(tag).each((_, el) => {
-            // @ts-expect-error cannot infer type
-            el.tagName = component
-          })
-        }
         const body = $('body').html()
+        const styles = $('style')
+          .map((i, el) => `<style scoped>${$(el).html()}</style>`)
+          .toArray()
 
         const templateContent =
           body?.replace(preReplaceRe, '$1 v-pre>') +
@@ -154,7 +134,7 @@ ${code}
         const scriptSetup = `const __gitHistory = ${gitHistory}`
         const script = `export const __headers = ${JSON.stringify(headers)}`
         // TODO: headers
-        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="rendered-content typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template><script setup>${scriptSetup}</script><script>${script}</script>`
+        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="rendered-content typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template><script setup>${scriptSetup}</script><script>${script}</script>\n${styles.join('\n')}`
       }
     },
     handleHotUpdate({ server, file }) {
