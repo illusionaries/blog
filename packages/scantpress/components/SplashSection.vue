@@ -10,9 +10,6 @@ const props = defineProps<{
 
 const resolvedSplash = ref<string | undefined>(undefined)
 
-// only takeover layout on clientSide, after mounted
-const takeOverLayout = ref(false)
-
 watchEffect(async (onCleanup) => {
   resolvedSplash.value = undefined
   let aborted = false
@@ -37,7 +34,6 @@ onMounted(() => {
   observer.observe(textSectionWrapper.value)
   // initial set
   textSectionHeight.value = textSectionWrapper.value.getBoundingClientRect().height
-  takeOverLayout.value = true
 })
 
 onUnmounted(() => {
@@ -57,10 +53,7 @@ onServerPrefetch(async () => {
     relative
     duration-500
     ease-fast-in
-    :class="{ 'm-t-16 lg:m-t-12': !resolvedSplash }"
-    :style="{
-      height: `${resolvedSplash ? '26rem' : takeOverLayout ? textSectionHeight + 'px' : 'auto'}`,
-    }">
+    :class="{ 'm-t-16 lg:m-t-12': !resolvedSplash }">
     <div
       relative
       transition-height
@@ -91,7 +84,7 @@ onServerPrefetch(async () => {
         max-w-840px
         p-x-6
         lg:p-x-12
-        :class="[resolvedSplash ? 'bottom-6' : 'top-0', { absolute: takeOverLayout }]"
+        :class="[resolvedSplash ? 'bottom-6 absolute' : 'top-0']"
         ref="text-section-wrapper">
         <TagList
           :stateful="false"
