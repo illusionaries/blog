@@ -9,6 +9,19 @@ ScantPress is now with functional Typst support! You are reading a blog post wri
   #body
 ]
 
+#html.div(class: ("container", "info"))[
+  #html.p(class: ("container-title"))[Updates]
+  As of writing the demo, Typst was 0.14.0.
+
+  A few updates after that:
+  - Math is now rendered as MathML, supported by Typst 0.15.0
+  - The casing issue in tags was actually caused by Cheerio, which converts tag names to lowercase. This was fixed by using ```js { xml: true }``` option.
+
+  A few more quirks found:
+  - Nothing works under dark mode, to be honest. Strokes are kept in black, code themes don't switch...
+  - circuiteria, the package used to draw the circuit diagram below, broke after 0.15. The fix was merged today (Jul 1, 2026), but not yet released.
+]
+
 = What Can We Do Now?
 
 Following features have already been implemented:
