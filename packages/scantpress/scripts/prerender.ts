@@ -17,7 +17,7 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
   const toContentRoot = (p: string) => path.resolve(config.root, config.contentDir || 'content', p)
   const normailzedAbsoluteHref = (p: string) => {
     const full = p.replace(/\/index\.(?:md|vue|typ)$/, '/').replace(/\.(md|vue|typ)$/, '/')
-    return '/' + path.relative(toContentRoot('./'), full)
+    return '/' + path.relative(toContentRoot('./'), full) + '/' // path.relative drops the final slash
   }
 
   const manifest = JSON.parse(
@@ -75,7 +75,6 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
       .replace(`<!--meta-->`, meta)
       .replace(`<!--title-suffix-->`, config.name)
       .replace(`data-prerender-inject-lang`, `lang="${lang || config.defaultLang}"`)
-
     const filePath = `dist/static${url.endsWith('/') ? url + 'index.html' : url}`
     customWriteFileSync(toProjectRoot(filePath), html)
     console.log(chalk.green('pre-rendered:'), filePath)

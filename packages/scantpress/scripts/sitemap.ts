@@ -18,7 +18,7 @@ export async function sitemap(config: SiteConfiguration & { root: string }) {
     const normalizedFull = p
       .replace(/\/index\.(?:md|vue|typ)$/, '/')
       .replace(/\.(?:md|vue|typ)$/, '/')
-    return '/' + path.relative(toContentRoot('./'), normalizedFull)
+    return '/' + path.relative(toContentRoot('./'), normalizedFull) + '/' // path.relative drops the final slash
   }
 
   const pages = [
