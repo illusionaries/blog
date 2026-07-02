@@ -20,6 +20,7 @@ export interface SiteConfiguration {
     email?: string
   }
   additionalHeads?: string[]
+  contentDir?: string
 }
 
 export function defineConfig(config: SiteConfiguration): SiteConfiguration {

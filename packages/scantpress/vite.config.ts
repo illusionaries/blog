@@ -4,10 +4,14 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import ScantPress from '@scantpress/vite'
+import GlobModulesProvider from './glob-modules-provider'
+import { loadConfig } from '@scantpress/shared'
+
+const scantpressConfig = await loadConfig()
+if (!scantpressConfig.sources[0]) throw new Error('No valid ScantPress configuration found.')
 
 const publicDir = fileURLToPath(new URL('../../public/', import.meta.url))
 const root = fileURLToPath(new URL('./', import.meta.url))
-
 // https://vite.dev/config/
 export default defineConfig({
   root,
@@ -24,6 +28,7 @@ export default defineConfig({
       },
     }),
     vueDevTools(),
+    GlobModulesProvider(),
   ],
   resolve: {
     alias: {

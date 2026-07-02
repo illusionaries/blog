@@ -14,3 +14,11 @@ declare module 'virtual:context' {
   }
   export default context
 }
+
+declare module 'virtual:modules' {
+  import type { Module } from '@scantpress/scantpress'
+
+  export const pageModules: Record<string, () => Promise<Module<never>>>
+
+  export const pageSplashes: Record<string, () => Promise<Module<string>>>
+}

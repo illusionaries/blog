@@ -14,6 +14,11 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
   console.log(chalk.bgYellow.greenBright('Prerender:'))
 
   const toProjectRoot = (p: string) => path.resolve(config.root, p)
+  const toContentRoot = (p: string) => path.resolve(config.root, config.contentDir || 'content', p)
+  const normailzedAbsoluteHref = (p: string) => {
+    const full = p.replace(/\/index\.(?:md|vue|typ)$/, '/').replace(/\.(md|vue|typ)$/, '/')
+    return '/' + path.relative(toContentRoot('./'), full)
+  }
 
   const manifest = JSON.parse(
     fs.readFileSync(toProjectRoot('dist/static/.vite/ssr-manifest.json'), 'utf-8'),
@@ -25,11 +30,8 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
 
   routesToPrerender.push(...Object.keys(config.categories).map((category) => `/${category}/`))
   routesToPrerender.push(
-    ...fg.sync(toProjectRoot('./content/**/*.md')).map((file) => {
-      const target = file
-        .replace(/\/index\.md$/, '/')
-        .replace(/\.md$/, '/')
-        .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
+    ...fg.sync(toContentRoot('./**/*.md')).map((file) => {
+      const target = normailzedAbsoluteHref(file)
       const frontmatter = gm(fs.readFileSync(file, 'utf-8')).data
       if (frontmatter.slug) {
         return `${frontmatter.slug}${frontmatter.slug.endsWith('/') ? '' : '/'}`
@@ -37,12 +39,9 @@ export async function prerender(config: SiteConfiguration & { root: string }) {
       return target
     }),
     ...fg
-      .sync(toProjectRoot('./content/**/*.(vue|typ)'))
+      .sync(toContentRoot('./**/*.(vue|typ)'))
       .map((file) => {
-        const target = file
-          .replace(/\/index\.(?:vue|typ)$/, '/')
-          .replace(/\.(?:vue|typ)$/, '/')
-          .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
+        const target = normailzedAbsoluteHref(file)
         const frontmatterCandidates = [file + '.yaml', file + '.yml']
         for (const candidate of frontmatterCandidates) {
           if (fs.existsSync(candidate)) {

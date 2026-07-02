@@ -6,16 +6,14 @@
     "packages/shared/**/*.ts",
     "content/**/*.ts",
     "content/**/*.vue",
-    "packages/shared/**/*.ts",
-    "test.ts"
+    "packages/shared/**/*.ts"
   ],
-  "exclude": ["src/**/__tests__/*"],
+  "exclude": ["src/**/__tests__/*", "packages/scantpress/scripts/*"],
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "paths": {
       "@app/*": ["./packages/scantpress/*"],
-      "@plugin/*": ["./packages/vite-plugin-scantpress/*"],
       "@/*": ["./*"]
     }
   }

@@ -8,13 +8,13 @@ import { MarkdownInstance } from './markdown/index.js'
 import path from 'path'
 
 async function generateIndex(config: SiteConfiguration & { root: string }): Promise<PageData[]> {
-  const toProjectRoot = (p: string) => path.resolve(config.root, p)
+  const toContentRoot = (p: string) => path.resolve(config.root, config.contentDir || 'content', p)
   const md = new MarkdownInstance(config)
   await md.init()
   return (
     await Promise.all(
       fg
-        .sync(toProjectRoot(`./content/**/*.(md|vue|typ)`))
+        .sync(toContentRoot(`./**/*.(md|vue|typ)`))
         .map((entry) => {
           if (entry.endsWith('.md')) {
             return { entry, frontmatter: matter.read(entry, { excerpt: true }) }
@@ -35,11 +35,13 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
         .map(async ({ entry, frontmatter }): Promise<PageData | undefined> => {
           if (!frontmatter) return undefined
           if (frontmatter.data.isComponent) return undefined
-          const entryToRoot = entry.replace(new RegExp(`^${toProjectRoot('./content')}`), '')
-          const path = entryToRoot
+          const entryToRoot =
+            '/' + // make it absolute -> /blog/a/b/c.md
+            path.relative(toContentRoot('./'), entry)
+          const href = entryToRoot
             .replace(/index\.(?:md|vue|typ)$/, '')
             .replace(/\.(?:md|vue|typ)/, '/')
-          const slugs = path.split('/').filter((slug) => slug)
+          const slugs = href.split('/').filter((slug) => slug)
           const data = frontmatter.data
           const time = data.time
           const { result: title, textContent: textTitle } = await md.renderMarkdownInline(
@@ -47,7 +49,7 @@ async function generateIndex(config: SiteConfiguration & { root: string }): Prom
           )
           const hidden = data.hidden ?? false
           const meta = data.meta
-          const slug = data.slug ?? path
+          const slug = data.slug ?? href
           const category = (slugs[0] in config.categories && slugs[0]) || undefined
           const tags = data.tags
           const noExerpt = data.noExcerpt ?? false

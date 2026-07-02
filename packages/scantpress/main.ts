@@ -7,21 +7,13 @@ import '@app/assets/transitions.css'
 
 import { createSSRApp, createApp as createSPAApp } from 'vue'
 import App from './App.vue'
-import { createRouter, RouterSymbol } from './router/router'
+import { createRouter, RouterSymbol } from './router/router.ts'
 import ExpanderComponent from './components/ExpanderComponent.vue'
 import BadgeComp from './components/BadgeComp.vue'
 import GitHistory from './components/GitHistory.vue'
-import { ClientOnly } from './components/ClientOnly'
-import { PageModulesInjectionKey, PageSplashesInjectionKey } from './injection'
-import type { Module } from './module'
-
-const pageModules = import.meta.glob(['./**/*.md', './**/*.vue', './**/*.typ'], {
-  base: '../../content/',
-}) as Record<string, () => Promise<Module<never>>>
-
-const pageSplashes = import.meta.glob(['./**/splash.*', './**/splash-dark.*'], {
-  base: '../../content/',
-}) as Record<string, () => Promise<Module<string>>>
+import { ClientOnly } from './components/ClientOnly.ts'
+import { PageModulesInjectionKey, PageSplashesInjectionKey } from './injection.ts'
+import { pageModules, pageSplashes } from 'virtual:modules'
 
 export function createApp() {
   const app = import.meta.env.DEV ? createSPAApp(App) : createSSRApp(App)

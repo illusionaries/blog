@@ -12,20 +12,25 @@ export async function sitemap(config: SiteConfiguration & { root: string }) {
   const links = []
 
   const toProjectRoot = (p: string) => path.resolve(config.root, p)
+  const toContentRoot = (p: string) =>
+    path.resolve(toProjectRoot(config.contentDir || 'content'), p)
+  const normalizedAbsoluteHref = (p: string) => {
+    const normalizedFull = p
+      .replace(/\/index\.(?:md|vue|typ)$/, '/')
+      .replace(/\.(?:md|vue|typ)$/, '/')
+    return '/' + path.relative(toContentRoot('./'), normalizedFull)
+  }
 
   const pages = [
     ...fg
-      .sync(toProjectRoot(`./content/**/*.md`))
+      .sync(toContentRoot(`./**/*.md`))
       .map((entry) => {
         return { entry, frontmatter: matter.read(entry) }
       })
       .map((file) => {
         const { entry, frontmatter } = file
         if (frontmatter.data.hidden) return undefined
-        const url = entry
-          .replace(/\/index\.md$/, '/')
-          .replace(/\.md$/, '/')
-          .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
+        const url = normalizedAbsoluteHref(entry)
         return {
           url: frontmatter.data.slug || url,
           lastmod: frontmatter.data.time,
@@ -33,11 +38,8 @@ export async function sitemap(config: SiteConfiguration & { root: string }) {
           priority: 0.5,
         }
       }),
-    ...fg.sync(toProjectRoot(`./content/**/*.(vue|typ)`)).map((file) => {
-      const url = file
-        .replace(/\/index\.(?:vue|typ)$/, '/')
-        .replace(/\.(?:vue|typ)$/, '/')
-        .replace(new RegExp(`^${toProjectRoot('./content')}`), '')
+    ...fg.sync(toContentRoot(`./**/*.(vue|typ)`)).map((file) => {
+      const url = normalizedAbsoluteHref(file)
       const frontmatterCandidates = [file + '.yaml', file + '.yml']
       for (const candidate of frontmatterCandidates) {
         if (fs.existsSync(candidate)) {
@@ -65,7 +67,7 @@ export async function sitemap(config: SiteConfiguration & { root: string }) {
   // TODO: also look for .vue files
   for (const category of Object.keys(config.categories)) {
     categories[category] = fg
-      .sync(toProjectRoot(`./content/${category}/**/*.md`))
+      .sync(toContentRoot(`./${category}/**/*.md`))
       .map((entry) => {
         return matter.read(entry).data.time || new Date()
       })

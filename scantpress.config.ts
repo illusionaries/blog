@@ -30,4 +30,5 @@ export default defineConfig({
   additionalHeads: [
     '<script defer src="https://cloud.umami.is/script.js" data-website-id="0b23eef0-bb7f-44a8-b4df-4121bd073e79"></script>',
   ],
+  contentDir: 'content',
 })
