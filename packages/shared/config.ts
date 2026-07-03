@@ -21,6 +21,7 @@ export interface SiteConfiguration {
   }
   additionalHeads?: string[]
   contentDir?: string
+  publicDir?: string
 }
 
 export function defineConfig(config: SiteConfiguration): SiteConfiguration {

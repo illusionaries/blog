@@ -1,38 +1,70 @@
 {
   "name": "scantpress",
+  "version": "0.0.1",
   "author": "illusionaries",
-  "private": true,
   "type": "module",
   "dependencies": {
     "@giscus/vue": "catalog:framework",
-    "@heroicons/vue": "catalog:framework",
-    "@vueuse/core": "catalog:framework",
-    "vue": "catalog:framework"
+    "@heroicons/vue": "catalog:framework"
   },
-  "devDependencies": {
-    "@scantpress/shared": "workspace:",
-    "@scantpress/vite": "workspace:",
-    "@vitejs/plugin-vue": "catalog:framework",
-    "chalk": "catalog:build",
-    "cheerio": "catalog:build",
-    "fast-glob": "catalog:build",
-    "feed": "catalog:build",
-    "gray-matter": "catalog:build",
-    "html-minifier": "catalog:build",
-    "husky": "catalog:linting",
-    "image-size": "catalog:build",
-    "js-yaml": "catalog:build",
-    "pagefind": "catalog:build",
-    "prettier": "catalog:linting",
-    "sitemap": "catalog:build",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs"
+    }
+  },
+  "bin": {
+    "scant": "./dist/cli/index.mjs"
+  },
+  "files": [
+    "./assets",
+    "./components",
+    "./dist",
+    "./router",
+    "./views",
+    "./app.ts",
+    "./App.vue",
+    "./entry-*.ts",
+    "./env.d.ts",
+    "./glob-modules-provider.ts",
+    "./index.html",
+    "./injection.ts",
+    "./modules.ts",
+    "./utils.ts",
+    "vite.config.ts"
+  ],
+  "peerDependencies": {
+    "vue": "catalog:framework",
+    "mathjax": "catalog:markdown",
+    "tsdown": "^0.22.3",
     "typescript": "catalog:framework",
     "vite": "catalog:framework",
     "vite-plugin-vue-devtools": "catalog:framework",
     "vue-tsc": "catalog:framework"
   },
+  "devDependencies": {
+    "@scantpress/shared": "workspace:",
+    "@scantpress/vite": "workspace:",
+    "@types/html-minifier-terser": "catalog:build",
+    "@vitejs/plugin-vue": "catalog:framework",
+    "@vueuse/core": "catalog:framework",
+    "chalk": "catalog:build",
+    "cheerio": "catalog:build",
+    "commander": "^15.0.0",
+    "fast-glob": "catalog:build",
+    "feed": "catalog:build",
+    "gray-matter": "catalog:build",
+    "html-minifier-terser": "catalog:build",
+    "husky": "catalog:linting",
+    "image-size": "catalog:build",
+    "js-yaml": "catalog:build",
+    "pagefind": "catalog:build",
+    "prettier": "catalog:linting",
+    "sitemap": "catalog:build"
+  },
   "scripts": {
     "//": "specifically use tsx to execute it in node environment",
     "build": "bunx tsx ./scripts/build.ts",
-    "dev": "vite"
+    "dev": "vite",
+    "build-barrel": "tsdown"
   }
 }

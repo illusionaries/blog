@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite'
 import path from 'node:path'
-import { loadConfig } from '@scantpress/shared'
+import { loadConfig } from 'scantpress'
 import { fileURLToPath } from 'node:url'
 
 export default async function GlobModulesProvider(): Promise<Plugin> {

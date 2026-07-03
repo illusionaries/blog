@@ -4,7 +4,7 @@ import allPages from 'virtual:pages.json'
 import { groupByYearMonth, pageEntryCompare } from '@app/utils'
 import ExpanderComponent from './ExpanderComponent.vue'
 import context from 'virtual:context'
-import type { PageData } from '@scantpress/shared'
+import type { PageData } from 'scantpress'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { ClientOnly } from './ClientOnly'
 

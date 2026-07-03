@@ -1,4 +1,4 @@
-import type { PageData } from '@scantpress/shared'
+import type { PageData } from 'scantpress'
 import { ref } from 'vue'
 import context from 'virtual:context'
 

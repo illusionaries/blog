@@ -10,7 +10,7 @@ import { useRoute } from '@app/router/router'
 import { onMounted, useTemplateRef } from 'vue'
 import FooterComponent from '@app/components/FooterComponent.vue'
 import context from 'virtual:context'
-import type { PageData } from '@scantpress/shared'
+import type { PageData } from 'scantpress'
 import { pageEntryCompare } from '@app/utils'
 
 const categories: { title: string; route: string; pages: PageData[] }[] = []

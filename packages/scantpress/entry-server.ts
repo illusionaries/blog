@@ -2,7 +2,7 @@
 
 import { basename } from 'path'
 import { renderToString, type SSRContext } from 'vue/server-renderer'
-import { createApp } from './main'
+import { createApp } from './app'
 import context from 'virtual:context'
 
 export async function render(url: string, manifest: { [key: string]: string[] }) {

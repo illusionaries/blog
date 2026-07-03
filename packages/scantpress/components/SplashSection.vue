@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PageData } from '@scantpress/shared'
+import type { PageData } from 'scantpress'
 import TagList from './TagList.vue'
 import { onMounted, onServerPrefetch, onUnmounted, ref, useTemplateRef, watchEffect } from 'vue'
 

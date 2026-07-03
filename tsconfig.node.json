@@ -11,7 +11,7 @@
     "local/*.ts",
     "packages/vite-plugin-scantpress/**/*.ts",
     "packages/shared/**/*.ts",
-    "packages/scantpress/scripts/*.ts",
+    "packages/scantpress/cli/*.ts",
     "scantpress.config.ts"
   ],
   "compilerOptions": {

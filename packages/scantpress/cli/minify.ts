@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { createHash } from 'crypto'
-import { minify as minifyHtml } from 'html-minifier'
+import { minify as minifyHtml } from 'html-minifier-terser'
 import * as cheerio from 'cheerio'
 import chalk from 'chalk'
 
@@ -21,7 +21,7 @@ export async function minify(staticDistDir: string) {
     return sriHash
   }
 
-  function processHtmlFile(filePath: string) {
+  async function processHtmlFile(filePath: string) {
     let htmlContent = fs.readFileSync(filePath, 'utf8')
 
     const $ = cheerio.load(htmlContent)
@@ -39,7 +39,7 @@ export async function minify(staticDistDir: string) {
 
     htmlContent = $.html()
 
-    const minifiedHtml = minifyHtml(htmlContent, {
+    const minifiedHtml = await minifyHtml(htmlContent, {
       caseSensitive: true,
       minifyCSS: true,
       minifyJS: true,
@@ -50,16 +50,17 @@ export async function minify(staticDistDir: string) {
     console.log(chalk.green('minified:'), filePath)
   }
 
-  function processDirectory(directory: string) {
-    fs.readdirSync(directory).forEach((file) => {
+  async function processDirectory(directory: string) {
+    const files = fs.readdirSync(directory)
+    for (const file of files) {
       const fullPath = path.join(directory, file)
       if (fs.statSync(fullPath).isDirectory()) {
-        processDirectory(fullPath)
+        await processDirectory(fullPath)
       } else if (file.endsWith('.html')) {
-        processHtmlFile(fullPath)
+        await processHtmlFile(fullPath)
       }
-    })
+    }
   }
 
-  processDirectory(staticDistDir)
+  await processDirectory(staticDistDir)
 }
