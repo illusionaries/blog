@@ -12,6 +12,8 @@ export default defineConfig({
       'mathjax',
       'jsdom',
       'jiti',
+      'unocss',
+      '@unocss/vite',
     ],
   },
   dts: {

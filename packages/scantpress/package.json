@@ -5,7 +5,10 @@
   "type": "module",
   "dependencies": {
     "@giscus/vue": "catalog:framework",
-    "@heroicons/vue": "catalog:framework"
+    "@heroicons/vue": "catalog:framework",
+    "jsdom": "catalog:markdown",
+    "rolldown": "^1.1.4",
+    "unconfig": "catalog:framework"
   },
   "exports": {
     ".": {
@@ -39,14 +42,17 @@
     "typescript": "catalog:framework",
     "vite": "catalog:framework",
     "vite-plugin-vue-devtools": "catalog:framework",
-    "vue-tsc": "catalog:framework"
+    "@vitejs/plugin-vue": "catalog:framework",
+    "@vueuse/core": "catalog:framework",
+    "vue-tsc": "catalog:framework",
+    "unocss": "catalog:framework",
+    "@unocss/vite": "catalog:framework",
+    "@mathjax/mathjax-mhchem-font-extension": "catalog:markdown"
   },
   "devDependencies": {
     "@scantpress/shared": "workspace:",
     "@scantpress/vite": "workspace:",
     "@types/html-minifier-terser": "catalog:build",
-    "@vitejs/plugin-vue": "catalog:framework",
-    "@vueuse/core": "catalog:framework",
     "chalk": "catalog:build",
     "cheerio": "catalog:build",
     "commander": "^15.0.0",
@@ -63,7 +69,7 @@
   },
   "scripts": {
     "//": "specifically use tsx to execute it in node environment",
-    "build": "bunx tsx ./scripts/build.ts",
+    "build": "bunx tsx ./cli/index.ts build",
     "dev": "vite",
     "build-barrel": "tsdown"
   }

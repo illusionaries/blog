@@ -4,6 +4,7 @@ import '@app/assets/containers.css'
 import '@app/assets/heimu.css'
 import '@app/assets/math-common.css'
 import '@app/assets/transitions.css'
+import '@app/assets/inter/inter.css'
 
 import { createSSRApp, createApp as createSPAApp } from 'vue'
 import App from './App.vue'

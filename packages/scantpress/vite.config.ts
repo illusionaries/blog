@@ -3,9 +3,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import ScantPress from '@scantpress/vite'
+import ScantPress, { loadConfig } from 'scantpress'
 import GlobModulesProvider from './glob-modules-provider'
-import { loadConfig } from '@scantpress/shared'
 import path from 'node:path'
 
 const scantpressConfig = await loadConfig()
