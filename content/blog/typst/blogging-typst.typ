@@ -10,7 +10,7 @@ ScantPress is now with functional Typst support! You are reading a blog post wri
 ]
 
 #html.div(class: ("container", "info"))[
-  #html.p(class: ("container-title"))[Updates]
+  #html.p(class: "container-title")[Updates]
   As of writing the demo, Typst was 0.14.0.
 
   A few updates after that:
@@ -19,7 +19,7 @@ ScantPress is now with functional Typst support! You are reading a blog post wri
 
   A few more quirks found:
   - Nothing works under dark mode, to be honest. Strokes are kept in black, code themes don't switch...
-  - circuiteria, the package used to draw the circuit diagram below, broke after 0.15. The fix was merged today (Jul 1, 2026), but not yet released.
+  - circuiteria, the package used to draw the circuit diagram below, broke after 0.15. The fix was merged today (Jul 1, 2026), but not yet released (update: released on July 3).
 ]
 
 = What Can We Do Now?
@@ -114,7 +114,7 @@ Probably not in the near future, but here are some:
 
 You can import Typst packages! If there are some compatibility issues, try wrapping it with `#html.frame()`. Here's a quick demo of `circuiteria` package:
 
-#import "@preview/circuiteria:0.2.0"
+#import "@preview/circuiteria:0.2.1"
 
 #let circuit(..args) = html.div(style: "overflow-x: auto", html.frame(circuiteria.circuit(..args)))
 
@@ -263,7 +263,7 @@ You can import Typst packages! If there are some compatibility issues, try wrapp
 
 #expander("Demo Code")[
   ```typ
-  #import "@preview/circuiteria:0.2.0"
+  #import "@preview/circuiteria:0.2.1"
 
   #let circuit(..args) = html.div(style: "overflow-x: auto", html.frame(circuiteria.circuit(..args)))
 
