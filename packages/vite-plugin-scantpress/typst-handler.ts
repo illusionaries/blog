@@ -7,6 +7,7 @@ import yaml from 'js-yaml'
 import { dirname } from 'path'
 import { MarkdownItHeader } from '@mdit-vue/plugin-headers'
 import { slugify } from '@mdit-vue/shared'
+import { SiteConfiguration } from '@scantpress/shared'
 
 const preReplaceRe = /(<pre(?:(?!v-pre)[\s\S])*?)>/gm
 
@@ -41,7 +42,7 @@ const getGitHistory = async (filename: string): Promise<string> => {
   return `[${result.trim().slice(0, -1)}]`
 }
 
-export default function typstHandler(): PluginOption {
+export default function typstHandler(config: SiteConfiguration): PluginOption {
   return {
     name: 'scantpress:typst-handler',
     enforce: 'pre',
@@ -73,7 +74,6 @@ export default function typstHandler(): PluginOption {
 
 ${code}
 `
-        const gitHistory = await getGitHistory(id)
         const html = await new Promise<string>((resolve, reject) => {
           const process = spawn(
             `typst`,
@@ -127,14 +127,16 @@ ${code}
           .map((i, el) => `<style scoped>${$(el).html()}</style>`)
           .toArray()
 
-        const templateContent =
-          body?.replace(preReplaceRe, '$1 v-pre>') +
-          '\n\n<hr>\n' +
-          `<h2>文件历史</h2><GitHistory :history='__gitHistory' />`
-        const scriptSetup = `const __gitHistory = ${gitHistory}`
+        let templateContent = body?.replace(preReplaceRe, '$1 v-pre>')
+        let scriptSetup = ''
+        if (config.git?.history) {
+          templateContent +=
+            '\n\n<hr>\n' + `<h2>文件历史</h2><GitHistory :history='__gitHistory' />`
+          const gitHistory = await getGitHistory(id)
+          scriptSetup = `const __gitHistory = ${gitHistory}`
+        }
         const script = `export const __headers = ${JSON.stringify(headers)}`
-        // TODO: headers
-        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="rendered-content typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template><script setup>${scriptSetup}</script><script>${script}</script>\n${styles.join('\n')}`
+        return `<template><main ${frontmatter?.hidden ? '' : 'data-pagefind-body'} class="rendered-content typst-content ${encodeURIComponent(frontmatter?.title)} ${frontmatter?.classes?.join(' ') || ''}">${templateContent}</main></template>${scriptSetup ? `<script setup>${scriptSetup}</script>` : ''}<script>${script}</script>\n${styles.join('\n')}`
       }
     },
     handleHotUpdate({ server, file }) {

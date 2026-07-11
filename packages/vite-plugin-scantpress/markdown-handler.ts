@@ -50,7 +50,6 @@ export default async function markdownHandler(
       if (id.endsWith('.md')) {
         const frontmatter = matter(code, { excerpt: true })
         const content = frontmatter.content
-        const gitHistory = await getGitHistory(id)
 
         const { sfcBlocks, headers, patchedTemplateContentStripped } = await md.renderMarkdown(
           content,
@@ -60,11 +59,13 @@ export default async function markdownHandler(
         )
 
         let templateContent = patchedTemplateContentStripped || ''
-        templateContent =
-          templateContent.replace(preReplaceRe, '$1 v-pre>') +
-          '\n\n<hr>\n' +
-          `<h2>文件历史</h2><GitHistory :history='__gitHistory' />`
-        injectSetupCode('const __gitHistory = ' + gitHistory, sfcBlocks)
+        templateContent = templateContent.replace(preReplaceRe, '$1 v-pre>')
+        if (config.git?.history) {
+          templateContent +=
+            '\n\n<hr>\n' + `<h2>文件历史</h2><GitHistory :history='__gitHistory' />`
+          const gitHistory = await getGitHistory(id)
+          injectSetupCode('const __gitHistory = ' + gitHistory, sfcBlocks)
+        }
         injectHeaderData(headers, sfcBlocks)
 
         return `<template><main ${frontmatter.data.hidden ? '' : 'data-pagefind-body'} class="rendered-content md-content ${encodeURIComponent(frontmatter.data.title)} ${frontmatter.data.classes?.join(' ') || ''}">${templateContent}</main></template>${sfcBlocks.scriptSetup?.content}${sfcBlocks.script?.content || ''}${sfcBlocks.styles.map((x) => x.content) || ''}${sfcBlocks.customBlocks.map((x) => x.content).join('')}`

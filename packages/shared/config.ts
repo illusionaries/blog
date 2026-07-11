@@ -11,7 +11,8 @@ export interface SiteConfiguration {
   name: string
   theme: 'normal' | 'new-year'
   pureStatic?: boolean
-  git: {
+  git?: {
+    history?: boolean
     repo: string
   }
   defaultLang: string

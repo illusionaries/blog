@@ -20,6 +20,7 @@ export default defineConfig({
   theme: 'normal',
   pureStatic: true,
   git: {
+    history: true,
     repo: 'illusionaries/blog',
   },
   defaultLang: 'zh-CN',

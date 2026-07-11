@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { dateStringLong } from '@app/utils'
 import { ListBulletIcon, RocketLaunchIcon, SparklesIcon } from '@heroicons/vue/24/outline'
-// TODO: replace with context plugin
 import context from 'virtual:context'
 const props = defineProps<{
   history: {
@@ -55,7 +54,7 @@ const props = defineProps<{
           rounded-lg
           decoration-none
           class="bg-gray-200/40 dark:bg-truegray-700/40 monospace"
-          :href="`https://github.com/${context.config.git.repo}/commit/${item.fullhash}`"
+          :href="`https://github.com/${context.config.git?.repo}/commit/${item.fullhash}`"
           target="_blank"
           >{{ item.hash }}</a
         >

@@ -18,7 +18,7 @@ export default async function ScantPress(): Promise<PluginOption[]> {
 
   return [
     await markdownHandler(configWithPath),
-    typstHandler(),
+    typstHandler(configWithPath),
     indexGenerator(configWithPath),
     contextPlugin(configWithPath),
     UnoCSS({
