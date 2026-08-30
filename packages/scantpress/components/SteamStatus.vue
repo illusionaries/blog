@@ -19,19 +19,19 @@ interface SteamStatus {
 const steamStatus = ref<SteamStatus>()
 
 const colorMapBg = {
-  0: 'bg-truegray-500 dark:bg-truegray-400 ', // offline
-  1: 'bg-green-500 dark:bg-green-400 ', // online
-  2: 'bg-yellow-500 dark:bg-yellow-400 ', // buzy
-  3: 'bg-blue-500 dark:bg-blue-400 ', // away
-  4: 'bg-purple-500 dark:bg-purple-400 ', // snooze
+  0: 'bg-truegray-500 dark:bg-truegray-400', // offline
+  1: 'bg-blue-500 dark:bg-blue-400', // online
+  2: 'bg-yellow-500 dark:bg-yellow-400', // buzy
+  3: 'bg-blue-500 dark:bg-blue-400', // away
+  4: 'bg-purple-500 dark:bg-purple-400', // snooze
 }
 
 const colorMapText = {
-  0: 'text-truegray-800 dark:text-truegray-200 ', // offline
-  1: 'text-green-800 dark:text-green-200 ', // online
-  2: 'text-yellow-800 dark:text-yellow-200 ', // buzy
-  3: 'text-blue-800 dark:text-blue-200 ', // away
-  4: 'text-purple-800 dark:text-purple-200 ', // snooze
+  0: 'text-truegray-700 dark:text-truegray-200', // offline
+  1: 'text-blue-700 dark:text-blue-200', // online
+  2: 'text-yellow-700 dark:text-yellow-200', // buzy
+  3: 'text-blue-700 dark:text-blue-200', // away
+  4: 'text-purple-700 dark:text-purple-200', // snooze
 }
 
 const statusMap = {
@@ -44,6 +44,9 @@ const statusMap = {
 
 const statusColorBg = computed(() => {
   if (steamStatus.value === undefined) return colorMapBg[0]
+  if (steamStatus.value.gameextrainfo) {
+    return 'bg-emerald-500 dark:bg-emerald-400'
+  }
   if (steamStatus.value?.personastate in colorMapBg) {
     return colorMapBg[steamStatus.value.personastate as keyof typeof colorMapBg]
   }
@@ -52,6 +55,9 @@ const statusColorBg = computed(() => {
 
 const statusColorText = computed(() => {
   if (steamStatus.value === undefined) return colorMapText[0]
+  if (steamStatus.value.gameextrainfo) {
+    return 'text-emerald-700 dark:text-emerald-200'
+  }
   if (steamStatus.value?.personastate in colorMapText) {
     return colorMapText[steamStatus.value.personastate as keyof typeof colorMapText]
   }
