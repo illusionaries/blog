@@ -29,7 +29,7 @@ onMounted(() => {
 <template>
   <NewYearBg v-if="context.config.theme === 'new-year'" />
   <div v-else class="bg"></div>
-  <MainComponent z-1 relative :class="{ 'new-year': context.config.theme === 'new-year' }" />
+  <MainComponent z-1 :class="{ 'new-year': context.config.theme === 'new-year' }" />
   <ClientOnly>
     <FullscreenSearch ref="search-comp-ref" />
   </ClientOnly>

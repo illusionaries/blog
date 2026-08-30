@@ -110,3 +110,15 @@ export function usePromiseResult<T>(promise: Promise<T>, initialValue: T) {
   })
   return value
 }
+
+export function getImmediateScrollableYParent(ele: Element) {
+  let parent: Element | null = ele.parentElement
+  while (parent) {
+    const overflowY = window.getComputedStyle(parent).overflowY
+    if (overflowY === 'auto' || overflowY === 'scroll') {
+      return parent
+    }
+    parent = parent.parentElement
+  }
+  return null
+}

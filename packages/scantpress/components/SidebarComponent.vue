@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, type ComponentPublicInstance, inject } from 'vue'
 import allPages from 'virtual:pages.json'
-import { groupByYearMonth, pageEntryCompare } from '@app/utils'
+import { getImmediateScrollableYParent, groupByYearMonth, pageEntryCompare } from '@app/utils'
 import ExpanderComponent from './ExpanderComponent.vue'
 import context from 'virtual:context'
 import type { PageData } from 'scantpress'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import { ClientOnly } from './ClientOnly'
 
 const showSearch = inject<() => void>('showSearch')
@@ -46,7 +47,12 @@ watch(
   () => props.currentTitle,
   (newTitle) => {
     if (newTitle && entryElements.value[newTitle]) {
-      scrollIntoViewIfNeeded(entryElements.value[newTitle])
+      scrollIntoView(entryElements.value[newTitle], {
+        scrollMode: 'if-needed',
+        block: 'center',
+        behavior: 'smooth',
+        boundary: getImmediateScrollableYParent(entryElements.value[newTitle]!),
+      })
     }
   },
 )
@@ -55,7 +61,12 @@ onMounted(() => {
   if (!props.currentTitle) return
   if (!entryElements.value) return
   if (!entryElements.value[props.currentTitle]) return
-  scrollIntoViewIfNeeded(entryElements.value[props.currentTitle]!)
+  scrollIntoView(entryElements.value[props.currentTitle]!, {
+    scrollMode: 'if-needed',
+    block: 'center',
+    behavior: 'smooth',
+    boundary: getImmediateScrollableYParent(entryElements.value[props.currentTitle]!),
+  })
 })
 
 defineExpose({ toggleSidebar })
@@ -68,14 +79,6 @@ const elementRefToElement = (ele: Element | ComponentPublicInstance | null) => {
   return ele
 }
 
-const scrollIntoViewIfNeeded = (ele: Element) => {
-  const rect = ele.getBoundingClientRect()
-  if (!('scrollIntoView' in ele) || !rect) return
-  if (rect.top < 0 || rect.bottom > window.innerHeight) {
-    ele.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
-}
-
 const applePlatform = ref(false)
 
 onMounted(() => {
@@ -84,36 +87,35 @@ onMounted(() => {
 </script>
 
 <template>
-  <div lg:w-92 h-full>
+  <div lg:w-74 text-sm>
     <div
+      fixed
+      top-0
       w-screen
       h-screen
-      lg:w-92
-      fixed
-      h-full
-      z-999
+      z-1
       duration-300
       @click="toggleSidebar(true)"
       pointer-events-none
-      lg:pointer-events-unset
-      class="h-100dvh! lg:backdrop-brightness-100!"
-      :class="{ 'backdrop-brightness-40 pointer-events-unset': !sidebarCollapsed }">
-      <div
-        @click.stop
-        h-full
-        box-border
-        p-t-12
-        bg-gray-100
-        dark:bg-dark-800
-        lg:bg-transparent
-        duration-300
-        overflow-auto
-        overscroll-contain
-        class="w-80% max-w-400px lg:w-unset lg:max-w-unset -translate-x-100% lg:translate-x-0"
-        grid="~ rows-[auto_1fr]"
-        :class="{ 'translate-x-0! shadow-xl': !sidebarCollapsed }"
-        lg:shadow-none>
-        <div flex="~ items-center" p-x-6 md:p-x-12>
+      class="lg:backdrop-brightness-100!"
+      :class="{ 'backdrop-brightness-40 pointer-events-unset': !sidebarCollapsed }"></div>
+    <div
+      fixed
+      top-0
+      z-2
+      @click.stop
+      lg:sticky
+      box-border
+      bg-gray-100
+      dark:bg-dark-800
+      lg:bg-transparent
+      duration-300
+      class="w-80% max-w-400px lg:w-unset lg:max-w-unset -translate-x-100% lg:translate-x-0"
+      grid="~ rows-[auto_1fr]"
+      :class="{ 'translate-x-0! shadow-xl': !sidebarCollapsed }"
+      lg:shadow-none>
+      <div h-100dvh flex="~ col" p-t-16 lg:p-t-12 box-border>
+        <div flex="~ items-center" p-x-6 lg:p-l-12 lg:p-r-0>
           <a
             flex="~ items-center gap-2"
             href="/"
@@ -146,14 +148,22 @@ onMounted(() => {
             </div>
           </ClientOnly>
         </div>
-        <div overflow-y-scroll p-x-6 md:p-x-12 p-y-4 class="scroll-masked">
+        <div
+          p-x-6
+          lg:p-l-12
+          lg:p-r-0
+          p-y-4
+          flex-shrink-1
+          overflow-y-auto
+          overscroll-contain
+          lg:overscroll-unset
+          class="scroll-masked">
           <ExpanderComponent
-            m-t-4
-            v-for="category in categories"
-            :key="category.title"
-            header-wrapper-class="sticky top-4">
+            v-for="(category, index) in categories"
+            :class="{ 'm-t-2': index !== 0 }"
+            :key="category.title">
             <template #header>
-              <h3 m-0>
+              <h3>
                 <a
                   :href="category.route"
                   class="text-unset!"

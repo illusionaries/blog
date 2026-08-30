@@ -8,6 +8,7 @@
     "@heroicons/vue": "catalog:framework",
     "jsdom": "catalog:markdown",
     "rolldown": "^1.1.4",
+    "scroll-into-view-if-needed": "^3.1.0",
     "unconfig": "catalog:framework"
   },
   "exports": {

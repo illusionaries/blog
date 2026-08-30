@@ -34,9 +34,7 @@ categories.forEach((category, index) => {
 
 const scrollViewRef = useTemplateRef('scrollViewRef')
 const mobileScrollViewRef = useTemplateRef('mobileScrollViewRef')
-const route = useRoute(() =>
-  Math.max(scrollViewRef.value?.scrollTop ?? 0, mobileScrollViewRef.value?.scrollTop ?? 0),
-)
+const route = useRoute(() => document.scrollingElement?.scrollTop)
 useTitle(context.config.name)
 
 onMounted(() => {
@@ -46,81 +44,68 @@ onMounted(() => {
 </script>
 
 <template>
-  <main p-l-6 lg:p-l-12>
-    <div
-      w-full
-      h-screen
-      box-border
-      class="h-100dvh!"
-      sm:grid
-      sm:grid-cols-2
-      lg:grid-cols-3
-      max-w-1680px
-      m-x-auto
-      gap-6
-      lg:gap-12
-      overflow-auto
-      ref="mobileScrollViewRef">
-      <div
-        flex="~ items-center justify-center col"
-        m-t-24
-        box-border
-        sm:m-t-0
-        p-r-6
-        sm:p-r-0
-        class="slide-in">
-        <h1 m-t-8 m-b-0 text-center style="view-transition-name: site-title">
-          {{ context.config.name }}
-        </h1>
-        <div flex="~ items-center gap-6" m-t-8>
-          <a
-            v-if="context.config.social?.github"
-            :href="`https://github.com/${context.config.social.github}`"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="no-marker"
-            h-7>
-            <AutoDarkImage :src="GithubMark" :src-dark="GithubMarkWhite" h-full alt="Github 标识" />
-          </a>
-          <a
-            v-if="context.config.social?.email"
-            :href="`mailto:${context.config.social.email}`"
-            h-7
-            dark:text-white
-            text-black>
-            <EnvelopeIcon class="h-7" />
-          </a>
-        </div>
-      </div>
-      <div lg:col-span-2 overflow-auto p-y-12 p-r-6 lg:p-r-12 ref="scrollViewRef">
-        <div m-t-8 v-for="(category, categoryIndex) in categories" :key="category.title">
-          <div
-            flex="~ items-center"
-            class="slide-in"
-            :style="`--slide-in-stage: ${previousLengths[categoryIndex]! + categoryIndex + 1}`">
-            <h2 m-0 flex-grow-1>{{ category.title }}</h2>
+  <main lg:grid="~ cols-[auto_1fr] gap-12" mx-auto max-w-1200px p-b-12>
+    <div p-t-24 p-b-16 lg:w-74 lg:p-t-0 lg:p-b-0>
+      <div lg:sticky lg:top-0 lg:h-100dvh flex="~ col justify-center lg:items-end">
+        <div flex="~ items-center justify-center col" class="slide-in">
+          <h1 m-y-0 text-center style="view-transition-name: site-title">
+            {{ context.config.name }}
+          </h1>
+          <div flex="~ items-center gap-6" m-t-8>
             <a
-              class="text-unset! hover:bg-gray/10 p-l-2 p-y-1 rounded-md"
-              decoration-none
-              flex="~ items-center"
-              :href="category.route">
-              <span>所有{{ category.title }}</span>
-              <ChevronRightIcon class="h-5" />
+              v-if="context.config.social?.github"
+              :href="`https://github.com/${context.config.social.github}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="no-marker"
+              h-7>
+              <AutoDarkImage
+                :src="GithubMark"
+                :src-dark="GithubMarkWhite"
+                h-full
+                alt="Github 标识" />
+            </a>
+            <a
+              v-if="context.config.social?.email"
+              :href="`mailto:${context.config.social.email}`"
+              h-7
+              dark:text-white
+              text-black>
+              <EnvelopeIcon class="h-7" />
             </a>
           </div>
-
-          <div m-t-4>
-            <PageListEntry
-              v-for="(page, pageIndex) in category.pages.slice(0, 3)"
-              class="slide-in"
-              :style="`--slide-in-stage: ${pageIndex + previousLengths[categoryIndex]! + categoryIndex + 1 + 1}`"
-              :key="page.title"
-              :page-entry="page" />
-          </div>
         </div>
-        <FooterComponent m-t-12 />
       </div>
     </div>
+    <div px-6 lg:pl-0 lg:pr-12 lg:pt-12>
+      <div v-for="(category, categoryIndex) in categories" :key="category.title" m-t-8>
+        <div
+          flex="~ items-center"
+          class="slide-in"
+          :style="`--slide-in-stage: ${previousLengths[categoryIndex]! + categoryIndex + 1}`">
+          <h2 m-0 flex-grow-1>{{ category.title }}</h2>
+          <a
+            class="text-unset! hover:bg-gray/10 p-l-2 p-y-1 rounded-md"
+            decoration-none
+            flex="~ items-center"
+            :href="category.route">
+            <span>所有{{ category.title }}</span>
+            <ChevronRightIcon class="h-5" />
+          </a>
+        </div>
+
+        <div m-t-4>
+          <PageListEntry
+            v-for="(page, pageIndex) in category.pages.slice(0, 3)"
+            class="slide-in"
+            :style="`--slide-in-stage: ${pageIndex + previousLengths[categoryIndex]! + categoryIndex + 1 + 1}`"
+            :key="page.title"
+            :page-entry="page" />
+        </div>
+      </div>
+    </div>
+    <div h-12 lg:hidden />
+    <FooterComponent mode="home" />
   </main>
 </template>
 

@@ -2,6 +2,7 @@
 import { ArrowUpIcon, ArrowDownIcon, ArrowTurnDownLeftIcon } from '@heroicons/vue/16/solid'
 import { XMarkIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { refDebounced } from '@vueuse/core'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import { nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,9 +81,10 @@ function onArrowKey(key: 'up' | 'down') {
   nextTick(() => {
     const el = resultEntryElements.value?.find((x) => x.classList.contains('selected-search-entry'))
     if (!el) return
-    if ('scrollIntoViewIfNeeded' in el && typeof el.scrollIntoViewIfNeeded === 'function')
-      el.scrollIntoViewIfNeeded()
-    else el.scrollIntoView({ block: 'nearest' })
+    scrollIntoView(el, {
+      behavior: 'smooth',
+      block: 'nearest',
+    })
   })
 }
 

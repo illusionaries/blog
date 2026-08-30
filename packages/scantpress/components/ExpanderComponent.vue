@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ChevronRightIcon } from '@heroicons/vue/24/outline'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, type StyleValue } from 'vue'
 
 const props = defineProps<{
   initialCollapsed?: boolean
   extendToggleArea?: boolean
   headerWrapperClass?: string
+  headerWrapperStyle?: StyleValue
 }>()
 
 const contentWrapperRef = ref<HTMLDivElement>()
@@ -50,6 +51,7 @@ onUnmounted(() => {
     <div
       flex="~ items-center"
       @click="extendToggleArea ? toggleCollapsed() : null"
+      :style="headerWrapperStyle"
       :class="[{ 'cursor-pointer': extendToggleArea }, headerWrapperClass ?? '']">
       <slot name="header"></slot>
       <button

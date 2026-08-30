@@ -239,10 +239,10 @@ onServerPrefetch(async () => {
 </script>
 
 <template>
-  <div lg:grid class="lg:grid-cols-[auto_1fr_auto]" overflow-auto>
+  <div lg:grid class="lg:grid-cols-[auto_1fr_auto] gap-y-12" mx-auto max-w-1600px p-b-12>
     <ProgressBar ref="progressbar" />
     <SidebarComponent ref="sidebar-ref" :current-title="pageData?.title" />
-    <div overflow-auto box-border ref="document-wrapper">
+    <div box-border ref="document-wrapper" lg:m-l-6>
       <div>
         <TopbarComponent
           :toggleSidebarFn="sidebarRef?.toggleSidebar"
@@ -273,11 +273,12 @@ onServerPrefetch(async () => {
                 lang="zh-CN" />
             </div>
           </ClientOnly>
-          <FooterComponent p-y-12 />
         </div>
       </div>
     </div>
     <PageOutline hidden xl:block :page-outline="outline" :highlighted-slug="highlightedSlug" />
+    <div h-12 lg:hidden></div>
+    <FooterComponent mode="page" />
   </div>
 </template>
 
