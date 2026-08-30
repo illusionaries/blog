@@ -42,7 +42,6 @@ defineProps<{
     px-6
     lg:px-0
     :class="{ 'lg:ml-6': mode === 'page' }">
-    >
     <div
       flex="~ col items-center lg:items-start gap-2"
       lg:absolute
