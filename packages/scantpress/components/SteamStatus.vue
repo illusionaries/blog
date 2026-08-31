@@ -19,19 +19,19 @@ interface SteamStatus {
 const steamStatus = ref<SteamStatus>()
 
 const colorMapBg = {
-  0: 'bg-truegray-500 dark:bg-truegray-400', // offline
-  1: 'bg-blue-500 dark:bg-blue-400', // online
+  0: 'bg-gray-500 dark:bg-truegray-400', // offline
+  1: 'bg-sky-500 dark:bg-sky-400', // online
   2: 'bg-yellow-500 dark:bg-yellow-400', // buzy
-  3: 'bg-blue-500 dark:bg-blue-400', // away
+  3: 'bg-sky-500 dark:bg-sky-400', // away
   4: 'bg-purple-500 dark:bg-purple-400', // snooze
 }
 
 const colorMapText = {
-  0: 'text-truegray-700 dark:text-truegray-200', // offline
-  1: 'text-blue-700 dark:text-blue-200', // online
-  2: 'text-yellow-700 dark:text-yellow-200', // buzy
-  3: 'text-blue-700 dark:text-blue-200', // away
-  4: 'text-purple-700 dark:text-purple-200', // snooze
+  0: 'text-gray-600 dark:text-truegray-400', // offline
+  1: 'text-sky-600 dark:text-sky-400', // online
+  2: 'text-yellow-600 dark:text-yellow-400', // buzy
+  3: 'text-sky-600 dark:text-sky-400', // away
+  4: 'text-purple-600 dark:text-purple-400', // snooze
 }
 
 const statusMap = {
@@ -75,12 +75,12 @@ const statusText = computed(() => {
 let interval: null | ReturnType<typeof setInterval> = null
 
 onMounted(async () => {
-  steamStatus.value = await fetch(`https://steam-status.illusion.blog/${props.steamId}`).then(
+  steamStatus.value = await fetch(`https://status.illusion.blog/steam/${props.steamId}`).then(
     (res) => res.json(),
   )
 
   interval = setInterval(async () => {
-    steamStatus.value = await fetch(`https://steam-status.illusion.blog/${props.steamId}`).then(
+    steamStatus.value = await fetch(`https://status.illusion.blog/steam/${props.steamId}`).then(
       (res) => res.json(),
     )
   }, 6000 * 3)

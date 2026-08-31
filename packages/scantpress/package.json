@@ -4,6 +4,7 @@
   "author": "illusionaries",
   "type": "module",
   "dependencies": {
+    "@dev.icons/vue": "^1.1.0",
     "@giscus/vue": "catalog:framework",
     "@heroicons/vue": "catalog:framework",
     "jsdom": "catalog:markdown",

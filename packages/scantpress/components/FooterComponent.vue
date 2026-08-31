@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ClientOnly } from './ClientOnly'
+import CodetimeStatus from './CodetimeStatus.vue'
 import SteamStatus from './SteamStatus.vue'
 
 const year = new Date().getFullYear()
@@ -11,9 +12,10 @@ defineProps<{
 
 <template>
   <div
+    opacity-70
     text-sm
-    text-gray-400
-    dark:text-truegray-600
+    text-gray-600
+    dark:text-truegray-400
     flex="~ gap-2 justify-center"
     lg:flex="~ gap-1 col"
     lg:w-74
@@ -33,17 +35,18 @@ defineProps<{
     <a href="/site/" text-inherit>ScantPress</a>
   </div>
   <div
+    opacity-70
     text-xs
     lg:text-left
     lg:relative
     h-full
-    text-gray-400
-    dark:text-truegray-600
+    text-gray-600
+    dark:text-truegray-400
     px-6
     lg:px-0
     :class="{ 'lg:ml-6': mode === 'page' }">
     <div
-      flex="~ col items-center lg:items-start gap-2"
+      flex="~ col items-center lg:items-start gap-4 lg:gap-2"
       lg:absolute
       lg:top-0
       lg:bottom-0
@@ -53,18 +56,12 @@ defineProps<{
       text-center
       lg:text-left
       :class="{ 'lg:max-w-840px lg:mx-auto lg:px-12 box-border': mode === 'page' }">
-      <div
-        lg:flex-1
-        h-8
-        lg:h-auto
-        lg:min-h-0
-        opacity-80
-        dark:opacity-60
-        order-last
-        lg:order-first
-        text-left>
+      <div lg:flex-1 h-8 lg:h-auto lg:min-h-0 order-last lg:order-first text-left>
         <ClientOnly>
-          <SteamStatus steam-id="76561199023601031" />
+          <div h-full flex="~ gap-4">
+            <SteamStatus steam-id="76561199023601031" />
+            <CodetimeStatus />
+          </div>
         </ClientOnly>
       </div>
       <div mt-2 lg:mt-0>

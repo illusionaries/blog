@@ -27,6 +27,7 @@
         "scant": "./dist/cli/index.mjs",
       },
       "dependencies": {
+        "@dev.icons/vue": "^1.1.0",
         "@giscus/vue": "catalog:framework",
         "@heroicons/vue": "catalog:framework",
         "jsdom": "catalog:markdown",
@@ -279,6 +280,8 @@
     "@csstools/css-syntax-patches-for-csstree": ["@csstools/css-syntax-patches-for-csstree@1.0.23", "https://registry.npmmirror.com/@csstools/css-syntax-patches-for-csstree/-/css-syntax-patches-for-csstree-1.0.23.tgz", {}, "sha512-YEmgyklR6l/oKUltidNVYdjSmLSW88vMsKx0pmiS3r71s8ZZRpd8A0Yf0U+6p/RzElmMnPBv27hNWjDQMSZRtQ=="],
 
     "@csstools/css-tokenizer": ["@csstools/css-tokenizer@3.0.4", "https://registry.npmmirror.com/@csstools/css-tokenizer/-/css-tokenizer-3.0.4.tgz", {}, "sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw=="],
+
+    "@dev.icons/vue": ["@dev.icons/vue@1.1.0", "https://registry.npmmirror.com/@dev.icons/vue/-/vue-1.1.0.tgz", { "peerDependencies": { "vue": ">= 3.3" } }, "sha512-YFJ5LzqUjcQR/8IodP/zgvWiZtU7HZ0st9g2kwb/Y1selGlS/8fpH3UmkqAvjYaIlAzz1PxpQjBm+HzgogLKuA=="],
 
     "@emnapi/core": ["@emnapi/core@1.11.1", "https://registry.npmmirror.com/@emnapi/core/-/core-1.11.1.tgz", { "dependencies": { "@emnapi/wasi-threads": "1.2.2", "tslib": "^2.4.0" } }, "sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ=="],
 
