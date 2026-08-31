@@ -8,7 +8,6 @@ import {
   Python,
   Rust,
   TypescriptIcon,
-  VisualStudioCode,
   _Vue,
   Json,
   Yaml,
@@ -16,6 +15,7 @@ import {
 } from '@dev.icons/vue'
 
 import VSCode from './codetime-assets/VSCode.vue'
+import TypstIcon from './codetime-assets/TypstIcon.vue'
 
 interface CodetimeStatus {
   language: string
@@ -45,6 +45,7 @@ const languageMap = {
   json: Json,
   yaml: Yaml,
   toml: Toml,
+  typst: TypstIcon,
 }
 
 const languageIcon = computed(() => {
@@ -88,7 +89,7 @@ onUnmounted(() => {
   <div v-if="codetimeStatus" flex="~ gap-2 items-center" h-full text-blue-600 dark:text-blue-400>
     <div relative h-full>
       <component :is="editorIcon" class="min-h-0 h-full block object-cover w-auto" />
-      <component :is="languageIcon" class="absolute right--2px bottom--2px outlined" />
+      <component :is="languageIcon" class="absolute right--2px bottom--2px outlined h-1em w-auto" />
     </div>
     <div>
       <span>正在捣鼓 </span>
