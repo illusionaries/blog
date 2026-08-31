@@ -277,7 +277,9 @@ onServerPrefetch(async () => {
       </div>
     </div>
     <PageOutline hidden xl:block :page-outline="outline" :highlighted-slug="highlightedSlug" />
-    <div h-12 lg:hidden></div>
+    <div h-12 xl:hidden>
+      <!-- ...-> lg: a spacer between the main content and the footer, lg -> xl: a stub for the hidden outline -->
+    </div>
     <FooterComponent mode="page" />
   </div>
 </template>
