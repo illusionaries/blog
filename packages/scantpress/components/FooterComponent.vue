@@ -56,11 +56,11 @@ defineProps<{
       text-center
       lg:text-left
       :class="{ 'lg:max-w-840px lg:mx-auto lg:px-12 box-border': mode === 'page' }">
-      <div lg:flex-1 h-8 lg:h-auto lg:min-h-0 order-last lg:order-first text-left>
+      <div lg:flex-1 lg:h-auto lg:min-h-0 order-last lg:order-first text-left>
         <ClientOnly>
-          <div h-full flex="~ gap-4">
-            <SteamStatus steam-id="76561199023601031" />
-            <CodetimeStatus />
+          <div lg:h-full flex="~ gap-4 col lg:row items-center">
+            <SteamStatus h-8 lg:h-full flex-shrink-1 steam-id="76561199023601031" />
+            <CodetimeStatus h-8 lg:h-full flex-shrink-1 />
           </div>
         </ClientOnly>
       </div>

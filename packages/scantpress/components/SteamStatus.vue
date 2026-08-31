@@ -94,7 +94,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="steamStatus" h-full>
+  <div v-if="steamStatus" overflow-hidden text-ellipsis text-nowrap>
     <div flex="~ gap-2 items-center" h-full>
       <div relative h-full>
         <img

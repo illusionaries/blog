@@ -86,12 +86,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="codetimeStatus" flex="~ gap-2 items-center" h-full text-blue-600 dark:text-blue-400>
+  <div v-if="codetimeStatus" flex="~ gap-2 items-center" text-blue-600 dark:text-blue-400>
     <div relative h-full>
       <component :is="editorIcon" class="min-h-0 h-full block object-cover w-auto" />
       <component :is="languageIcon" class="absolute right--2px bottom--2px outlined h-1em w-auto" />
     </div>
-    <div>
+    <div overflow-hidden text-ellipsis text-nowrap>
       <span>正在捣鼓 </span>
       <a
         v-if="codetimeStatus.gitOrigin.length"
