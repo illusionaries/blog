@@ -20,7 +20,7 @@ const friends: Friend[] = [
   {
     name: 'Wind Graham',
     link: 'http://windgraham.art/',
-    avatar: 'http://www.windgraham.art/assets/images/avatar.jpg',
+    avatar: 'https://www.windgraham.art/%E5%A4%B4%E5%83%8F.jpg',
     description: '杏花疏影里，吹笛到天明',
   },
   {
@@ -28,6 +28,12 @@ const friends: Friend[] = [
     link: 'https://lwlaymh.github.io/',
     avatar: 'https://lwlaymh.github.io/images/%E5%A4%B4%E5%83%8F1.jpg',
     description: '不过是白日梦里一瞬息',
+  },
+  {
+    name: '乌鸡卷',
+    link: 'https://wjjpku.github.io/',
+    avatar: 'https://wjjpku.github.io/avatar.jpg',
+    description: '睡觉提高工作效率，午睡提高睡觉效率',
   },
   {
     name: '超几何冰精',
