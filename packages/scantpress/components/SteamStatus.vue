@@ -83,7 +83,7 @@ onMounted(async () => {
     steamStatus.value = await fetch(`https://status.illusion.blog/steam/${props.steamId}`).then(
       (res) => res.json(),
     )
-  }, 6000 * 3)
+  }, 60000)
 })
 
 onUnmounted(() => {

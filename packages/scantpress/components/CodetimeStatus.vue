@@ -75,7 +75,7 @@ let interval: ReturnType<typeof setInterval> | null = null
 
 onMounted(async () => {
   await update()
-  interval = setInterval(update, 6000 * 3)
+  interval = setInterval(update, 60000)
 })
 
 onUnmounted(() => {
